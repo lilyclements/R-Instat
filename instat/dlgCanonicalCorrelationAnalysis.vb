@@ -13,13 +13,13 @@
 '
 ' You should have received a copy of the GNU General Public License k
 ' along with this program.  If not, see <http://www.gnu.org/licenses/>.
-Imports instat
 Imports instat.Translations
 Public Class dlgCanonicalCorrelationAnalysis
     Public strModelName As String = ""
     Public bFirstLoad As Boolean = True
     Private bResetSubdialog As Boolean = False
     Private bReset As Boolean = True
+    Public clsRCanCor, clsRCoef As New RFunction
 
     Private Sub dlgCanonicalCorrelationAnalysis_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If bFirstLoad Then
@@ -34,16 +34,12 @@ Public Class dlgCanonicalCorrelationAnalysis
         autoTranslate(Me)
     End Sub
 
-    Private Sub SetRCodeforControls(bReset As Boolean)
-        SetRCode(Me, ucrBase.clsRsyntax.clsBaseFunction, bReset)
-    End Sub
-
     Private Sub InitialiseDialog()
         ucrBase.clsRsyntax.iCallType = 0
         ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
         ucrBase.iHelpTopicID = 423
 
-        cmdCCAOptions.Enabled = False
+        'cmdCCAOptions.Enabled = False
 
         ' note: canne have the same variables in both receivers.
 
@@ -75,6 +71,7 @@ Public Class dlgCanonicalCorrelationAnalysis
 
     Private Sub SetDefaults()
         Dim clsDefaultFunction As New RFunction
+        clsRCanCor = New RFunction
         ucrSelectorCCA.Reset()
         ucrSaveResult.Reset()
         ucrReceiverXvariables.SetMeAsReceiver()
@@ -83,9 +80,18 @@ Public Class dlgCanonicalCorrelationAnalysis
         clsDefaultFunction.SetRCommand("cancor")
         clsDefaultFunction.SetAssignTo("last_CCA", strTempModel:="last_CCA", strTempDataframe:=ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem)
 
+        ' sub dialog options
+        clsRCanCor.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
+        clsRCanCor.AddParameter("value1", Chr(34) & "cancor" & Chr(34))
+        clsRCanCor.AddParameter("value2", Chr(34) & "coef" & Chr(34))
+
         ' Set default RFunction as the base function
         ucrBase.clsRsyntax.SetBaseRFunction(clsDefaultFunction.Clone())
         bResetSubdialog = True
+    End Sub
+
+    Private Sub SetRCodeforControls(bReset As Boolean)
+        SetRCode(Me, ucrBase.clsRsyntax.clsBaseFunction, bReset)
     End Sub
 
     Private Sub TestOKEnabled()
@@ -103,16 +109,37 @@ Public Class dlgCanonicalCorrelationAnalysis
     End Sub
 
     Private Sub cmdCCAOptions_Click(sender As Object, e As EventArgs) Handles cmdCCAOptions.Click
-        '        sdgCanonicalCorrelation.SetRFunction(ucrBase.clsRsyntax.clsBaseFunction, bResetSubdialog)
-        '        bResetSubdialog = False
-        '  sdgCanonicalCorrelation.ShowDialog()
+        sdgCanonicalCorrelation.SetRFunction(clsRCanCor, bResetSubdialog)
+        bResetSubdialog = False
+        sdgCanonicalCorrelation.ShowDialog()
     End Sub
 
+
     Private Sub ucrBaseCCA_clickok(sender As Object, e As EventArgs) Handles ucrBase.ClickOk
-        '     sdgCanonicalCorrelation.CCAOptions()
+        frmMain.clsRLink.RunScript(clsRCanCor.ToScript(), 2)
     End Sub
 
     Private Sub ucrSaveResult_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrSaveResult.ControlContentsChanged, ucrReceiverXvariables.ControlContentsChanged, ucrReceiverYvariables.ControlContentsChanged
         TestOKEnabled()
+    End Sub
+
+    Public Sub AssignName()
+        If ucrSaveResult.IsComplete Then
+            ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
+            strModelName = ucrSaveResult.GetText()
+        Else
+            ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
+            strModelName = "last_CCA"
+        End If
+    End Sub
+
+    Private Sub Test()
+        AssignName()
+        clsRCanCor.AddParameter("data_name", Chr(34) & ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
+        clsRCanCor.AddParameter("model_name", Chr(34) & strModelName & Chr(34))
+    End Sub
+
+    Private Sub ucrSaveResult_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSaveResult.ControlValueChanged, ucrSelectorCCA.ControlValueChanged
+        Test()
     End Sub
 End Class

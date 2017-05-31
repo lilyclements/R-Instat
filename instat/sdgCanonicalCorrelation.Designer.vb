@@ -24,13 +24,13 @@ Partial Class sdgCanonicalCorrelation
     Private Sub InitializeComponent()
         Me.tbRegOptions = New System.Windows.Forms.TabControl()
         Me.tbDisplay = New System.Windows.Forms.TabPage()
-        Me.chkCoef = New System.Windows.Forms.CheckBox()
-        Me.chkCanonicalCorrelations = New System.Windows.Forms.CheckBox()
         Me.tbGraphics = New System.Windows.Forms.TabPage()
         Me.rdoYVariables = New System.Windows.Forms.RadioButton()
         Me.rdoXVariables = New System.Windows.Forms.RadioButton()
         Me.chkPairwisePlot = New System.Windows.Forms.CheckBox()
         Me.ucrSdgButtons = New instat.ucrButtonsSubdialogue()
+        Me.ucrChkCanonicalCorrelations = New instat.ucrCheck()
+        Me.ucrChkCoefficients = New instat.ucrCheck()
         Me.tbRegOptions.SuspendLayout()
         Me.tbDisplay.SuspendLayout()
         Me.tbGraphics.SuspendLayout()
@@ -48,8 +48,8 @@ Partial Class sdgCanonicalCorrelation
         '
         'tbDisplay
         '
-        Me.tbDisplay.Controls.Add(Me.chkCoef)
-        Me.tbDisplay.Controls.Add(Me.chkCanonicalCorrelations)
+        Me.tbDisplay.Controls.Add(Me.ucrChkCoefficients)
+        Me.tbDisplay.Controls.Add(Me.ucrChkCanonicalCorrelations)
         Me.tbDisplay.Location = New System.Drawing.Point(4, 22)
         Me.tbDisplay.Name = "tbDisplay"
         Me.tbDisplay.Padding = New System.Windows.Forms.Padding(3)
@@ -58,28 +58,6 @@ Partial Class sdgCanonicalCorrelation
         Me.tbDisplay.Tag = "Display"
         Me.tbDisplay.Text = "Display"
         Me.tbDisplay.UseVisualStyleBackColor = True
-        '
-        'chkCoef
-        '
-        Me.chkCoef.AutoSize = True
-        Me.chkCoef.Location = New System.Drawing.Point(10, 39)
-        Me.chkCoef.Name = "chkCoef"
-        Me.chkCoef.Size = New System.Drawing.Size(81, 17)
-        Me.chkCoef.TabIndex = 1
-        Me.chkCoef.Tag = "Coefficients"
-        Me.chkCoef.Text = "Coefficients"
-        Me.chkCoef.UseVisualStyleBackColor = True
-        '
-        'chkCanonicalCorrelations
-        '
-        Me.chkCanonicalCorrelations.AutoSize = True
-        Me.chkCanonicalCorrelations.Location = New System.Drawing.Point(10, 15)
-        Me.chkCanonicalCorrelations.Name = "chkCanonicalCorrelations"
-        Me.chkCanonicalCorrelations.Size = New System.Drawing.Size(131, 17)
-        Me.chkCanonicalCorrelations.TabIndex = 0
-        Me.chkCanonicalCorrelations.Tag = "Canonical_Correlations"
-        Me.chkCanonicalCorrelations.Text = "Canonical Correlations"
-        Me.chkCanonicalCorrelations.UseVisualStyleBackColor = True
         '
         'tbGraphics
         '
@@ -137,6 +115,22 @@ Partial Class sdgCanonicalCorrelation
         Me.ucrSdgButtons.Size = New System.Drawing.Size(142, 30)
         Me.ucrSdgButtons.TabIndex = 0
         '
+        'ucrChkCanonicalCorrelations
+        '
+        Me.ucrChkCanonicalCorrelations.Checked = False
+        Me.ucrChkCanonicalCorrelations.Location = New System.Drawing.Point(15, 17)
+        Me.ucrChkCanonicalCorrelations.Name = "ucrChkCanonicalCorrelations"
+        Me.ucrChkCanonicalCorrelations.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkCanonicalCorrelations.TabIndex = 0
+        '
+        'ucrChkCoefficients
+        '
+        Me.ucrChkCoefficients.Checked = False
+        Me.ucrChkCoefficients.Location = New System.Drawing.Point(15, 43)
+        Me.ucrChkCoefficients.Name = "ucrChkCoefficients"
+        Me.ucrChkCoefficients.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkCoefficients.TabIndex = 0
+        '
         'sdgCanonicalCorrelation
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -153,7 +147,6 @@ Partial Class sdgCanonicalCorrelation
         Me.Text = "PCA Options"
         Me.tbRegOptions.ResumeLayout(False)
         Me.tbDisplay.ResumeLayout(False)
-        Me.tbDisplay.PerformLayout()
         Me.tbGraphics.ResumeLayout(False)
         Me.tbGraphics.PerformLayout()
         Me.ResumeLayout(False)
@@ -164,9 +157,9 @@ Partial Class sdgCanonicalCorrelation
     Friend WithEvents tbRegOptions As TabControl
     Friend WithEvents tbDisplay As TabPage
     Friend WithEvents tbGraphics As TabPage
-    Friend WithEvents chkCanonicalCorrelations As CheckBox
-    Friend WithEvents chkCoef As CheckBox
     Friend WithEvents chkPairwisePlot As CheckBox
     Friend WithEvents rdoYVariables As RadioButton
     Friend WithEvents rdoXVariables As RadioButton
+    Friend WithEvents ucrChkCoefficients As ucrCheck
+    Friend WithEvents ucrChkCanonicalCorrelations As ucrCheck
 End Class

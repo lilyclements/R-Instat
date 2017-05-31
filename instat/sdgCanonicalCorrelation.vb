@@ -15,10 +15,12 @@
 ' along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Imports instat.Translations
 Public Class sdgCanonicalCorrelation
+    Private bControlsInitialised As Boolean = False
+    Private clsRCanCor, clsRCoef As New RFunction
     Public bFirstLoad As Boolean = True
-    Public clsRCanCor, clsRCoef As New RFunction
+
     Public clsRGraphics As New RSyntax
-    Private Sub sdgCanonicalCorrelation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Public Sub sdgCanonicalCorrelation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         autoTranslate(Me)
 
         If bFirstLoad Then
@@ -27,25 +29,35 @@ Public Class sdgCanonicalCorrelation
         End If
     End Sub
 
+    Public Sub InitialiseControls()
+
+        ucrChkCanonicalCorrelations.SetParameter(New RParameter("value1"))
+        ucrChkCanonicalCorrelations.SetText("Canonical Correlations")
+        ucrChkCanonicalCorrelations.SetValueIfChecked(Chr(34) & "cancor" & Chr(34))
+        'don't run function if unchecked
+
+        ucrChkCoefficients.SetParameter(New RParameter("value2"))
+        ucrChkCoefficients.SetText("Coefficients")
+        ucrChkCoefficients.SetValueIfChecked(Chr(34) & "coef" & Chr(34))
+        'don't run function if unchecked
+
+
+    End Sub
+
     Private Sub Cancor()
-        clsRCanCor.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
-        clsRCanCor.AddParameter("data_name", Chr(34) & dlgCanonicalCorrelationAnalysis.ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
-        clsRCanCor.AddParameter("model_name", Chr(34) & dlgCanonicalCorrelationAnalysis.strModelName & Chr(34))
-        clsRCanCor.AddParameter("value1", Chr(34) & "cancor" & Chr(34))
+
         frmMain.clsRLink.RunScript(clsRCanCor.ToScript(), 2)
     End Sub
 
-    Private Sub Coef()
-        clsRCoef.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
-        clsRCoef.AddParameter("data_name", Chr(34) & dlgCanonicalCorrelationAnalysis.ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
-        clsRCoef.AddParameter("model_name", Chr(34) & dlgCanonicalCorrelationAnalysis.strModelName & Chr(34))
-        clsRCoef.AddParameter("value1", Chr(34) & "coef" & Chr(34))
-        frmMain.clsRLink.RunScript(clsRCoef.ToScript(), 2)
-    End Sub
+    'Private Sub Coef()
+    '    clsRCoef.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
+    '    clsRCoef.AddParameter("data_name", Chr(34) & dlgCanonicalCorrelationAnalysis.ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
+    '    clsRCoef.AddParameter("model_name", Chr(34) & dlgCanonicalCorrelationAnalysis.strModelName & Chr(34))
+    '    clsRCoef.AddParameter("value1", Chr(34) & "coef" & Chr(34))
+    '    frmMain.clsRLink.RunScript(clsRCoef.ToScript(), 2)
+    'End Sub
 
     Public Sub SetDefaults()
-        chkCanonicalCorrelations.Checked = True
-        chkCoef.Checked = True
         chkPairwisePlot.Checked = False
         rdoXVariables.Checked = False
         rdoYVariables.Checked = False
@@ -54,15 +66,15 @@ Public Class sdgCanonicalCorrelation
     End Sub
 
     Public Sub CCAOptions()
-        If (chkCanonicalCorrelations.Checked) Then
-            Cancor()
-        End If
-        If (chkCoef.Checked) Then
-            Coef()
-        End If
-        If (chkPairwisePlot.Checked = True) Then
-            GGPairs()
-        End If
+        'If (chkCanonicalCorrelations.Checked) Then
+        '    Cancor()
+        'End If
+        'If (chkCoef.Checked) Then
+        '    Coef()
+        'End If
+        'If (chkPairwisePlot.Checked = True) Then
+        '    GGPairs()
+        'End If
     End Sub
 
     Private Sub GGPairs()
@@ -103,5 +115,27 @@ Public Class sdgCanonicalCorrelation
         Else
             clsRGraphics.RemoveParameter("columns")
         End If
+    End Sub
+
+
+    Public Sub SetRFunction(clsNewRCanCor As RFunction, Optional bReset As Boolean = False)
+        If Not bControlsInitialised Then
+            InitialiseControls()
+        End If
+
+        clsRCanCor = clsNewRCanCor
+
+        'Setting Rcode for the sub dialog
+        ucrChkCanonicalCorrelations.SetRCode(clsRCanCor, bReset)
+
+    End Sub
+
+    Private Sub ucrSdgButtons_MouseLeave(sender As Object, e As EventArgs) Handles ucrSdgButtons.MouseLeave
+
+    End Sub
+
+    Private Sub ucrSdgButtons_ClickReturn(sender As Object, e As EventArgs) Handles ucrSdgButtons.ClickReturn
+        'If ucrChkCanonicalCorrelations.Checked Then
+        'End If
     End Sub
 End Class
