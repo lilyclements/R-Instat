@@ -24,13 +24,17 @@ Partial Class sdgCanonicalCorrelation
     Private Sub InitializeComponent()
         Me.tbRegOptions = New System.Windows.Forms.TabControl()
         Me.tbDisplay = New System.Windows.Forms.TabPage()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.ucrChkCoefficients = New instat.ucrCheck()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.ucrChkCanonicalCorrelations = New instat.ucrCheck()
         Me.tbGraphics = New System.Windows.Forms.TabPage()
         Me.rdoYVariables = New System.Windows.Forms.RadioButton()
         Me.rdoXVariables = New System.Windows.Forms.RadioButton()
         Me.chkPairwisePlot = New System.Windows.Forms.CheckBox()
         Me.ucrSdgButtons = New instat.ucrButtonsSubdialogue()
-        Me.ucrChkCanonicalCorrelations = New instat.ucrCheck()
-        Me.ucrChkCoefficients = New instat.ucrCheck()
+        Me.ucrPnlPairwisePlot = New instat.UcrPanel()
+        Me.ucrChkPairwisePlot = New instat.ucrCheck()
         Me.tbRegOptions.SuspendLayout()
         Me.tbDisplay.SuspendLayout()
         Me.tbGraphics.SuspendLayout()
@@ -48,8 +52,12 @@ Partial Class sdgCanonicalCorrelation
         '
         'tbDisplay
         '
+        Me.tbDisplay.Controls.Add(Me.ucrChkPairwisePlot)
+        Me.tbDisplay.Controls.Add(Me.RadioButton1)
         Me.tbDisplay.Controls.Add(Me.ucrChkCoefficients)
+        Me.tbDisplay.Controls.Add(Me.RadioButton2)
         Me.tbDisplay.Controls.Add(Me.ucrChkCanonicalCorrelations)
+        Me.tbDisplay.Controls.Add(Me.ucrPnlPairwisePlot)
         Me.tbDisplay.Location = New System.Drawing.Point(4, 22)
         Me.tbDisplay.Name = "tbDisplay"
         Me.tbDisplay.Padding = New System.Windows.Forms.Padding(3)
@@ -58,6 +66,46 @@ Partial Class sdgCanonicalCorrelation
         Me.tbDisplay.Tag = "Display"
         Me.tbDisplay.Text = "Display"
         Me.tbDisplay.UseVisualStyleBackColor = True
+        '
+        'RadioButton1
+        '
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Location = New System.Drawing.Point(23, 138)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(78, 17)
+        Me.RadioButton1.TabIndex = 6
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Tag = "Y_Variables"
+        Me.RadioButton1.Text = "Y Variables"
+        Me.RadioButton1.UseVisualStyleBackColor = True
+        '
+        'ucrChkCoefficients
+        '
+        Me.ucrChkCoefficients.Checked = False
+        Me.ucrChkCoefficients.Location = New System.Drawing.Point(15, 43)
+        Me.ucrChkCoefficients.Name = "ucrChkCoefficients"
+        Me.ucrChkCoefficients.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkCoefficients.TabIndex = 0
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Location = New System.Drawing.Point(23, 115)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(78, 17)
+        Me.RadioButton2.TabIndex = 5
+        Me.RadioButton2.TabStop = True
+        Me.RadioButton2.Tag = "X_Variables"
+        Me.RadioButton2.Text = "X Variables"
+        Me.RadioButton2.UseVisualStyleBackColor = True
+        '
+        'ucrChkCanonicalCorrelations
+        '
+        Me.ucrChkCanonicalCorrelations.Checked = False
+        Me.ucrChkCanonicalCorrelations.Location = New System.Drawing.Point(15, 17)
+        Me.ucrChkCanonicalCorrelations.Name = "ucrChkCanonicalCorrelations"
+        Me.ucrChkCanonicalCorrelations.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkCanonicalCorrelations.TabIndex = 0
         '
         'tbGraphics
         '
@@ -115,21 +163,20 @@ Partial Class sdgCanonicalCorrelation
         Me.ucrSdgButtons.Size = New System.Drawing.Size(142, 30)
         Me.ucrSdgButtons.TabIndex = 0
         '
-        'ucrChkCanonicalCorrelations
+        'ucrPnlPairwisePlot
         '
-        Me.ucrChkCanonicalCorrelations.Checked = False
-        Me.ucrChkCanonicalCorrelations.Location = New System.Drawing.Point(15, 17)
-        Me.ucrChkCanonicalCorrelations.Name = "ucrChkCanonicalCorrelations"
-        Me.ucrChkCanonicalCorrelations.Size = New System.Drawing.Size(100, 20)
-        Me.ucrChkCanonicalCorrelations.TabIndex = 0
+        Me.ucrPnlPairwisePlot.Location = New System.Drawing.Point(15, 111)
+        Me.ucrPnlPairwisePlot.Name = "ucrPnlPairwisePlot"
+        Me.ucrPnlPairwisePlot.Size = New System.Drawing.Size(100, 50)
+        Me.ucrPnlPairwisePlot.TabIndex = 8
         '
-        'ucrChkCoefficients
+        'ucrChkPairwisePlot
         '
-        Me.ucrChkCoefficients.Checked = False
-        Me.ucrChkCoefficients.Location = New System.Drawing.Point(15, 43)
-        Me.ucrChkCoefficients.Name = "ucrChkCoefficients"
-        Me.ucrChkCoefficients.Size = New System.Drawing.Size(100, 20)
-        Me.ucrChkCoefficients.TabIndex = 0
+        Me.ucrChkPairwisePlot.Checked = False
+        Me.ucrChkPairwisePlot.Location = New System.Drawing.Point(15, 89)
+        Me.ucrChkPairwisePlot.Name = "ucrChkPairwisePlot"
+        Me.ucrChkPairwisePlot.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkPairwisePlot.TabIndex = 7
         '
         'sdgCanonicalCorrelation
         '
@@ -147,6 +194,7 @@ Partial Class sdgCanonicalCorrelation
         Me.Text = "PCA Options"
         Me.tbRegOptions.ResumeLayout(False)
         Me.tbDisplay.ResumeLayout(False)
+        Me.tbDisplay.PerformLayout()
         Me.tbGraphics.ResumeLayout(False)
         Me.tbGraphics.PerformLayout()
         Me.ResumeLayout(False)
@@ -162,4 +210,8 @@ Partial Class sdgCanonicalCorrelation
     Friend WithEvents rdoXVariables As RadioButton
     Friend WithEvents ucrChkCoefficients As ucrCheck
     Friend WithEvents ucrChkCanonicalCorrelations As ucrCheck
+    Friend WithEvents RadioButton1 As RadioButton
+    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents ucrPnlPairwisePlot As UcrPanel
+    Friend WithEvents ucrChkPairwisePlot As ucrCheck
 End Class

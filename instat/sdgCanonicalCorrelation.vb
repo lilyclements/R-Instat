@@ -34,47 +34,22 @@ Public Class sdgCanonicalCorrelation
         ucrChkCanonicalCorrelations.SetParameter(New RParameter("value1"))
         ucrChkCanonicalCorrelations.SetText("Canonical Correlations")
         ucrChkCanonicalCorrelations.SetValueIfChecked(Chr(34) & "cancor" & Chr(34))
-        'don't run function if unchecked
 
-        ucrChkCoefficients.SetParameter(New RParameter("value2"))
+        ucrChkCoefficients.SetParameter(New RParameter("value1"))
         ucrChkCoefficients.SetText("Coefficients")
         ucrChkCoefficients.SetValueIfChecked(Chr(34) & "coef" & Chr(34))
-        'don't run function if unchecked
+
+        ucrChkPairwisePlot.SetParameter(New RParameter(""))
+        ucrChkPairwisePlot.SetText("Pairwise Plot")
+        ucrChkPairwisePlot.SetValueIfChecked()
+
+        ucrPnlPairwisePlot.AddRadioButton(rdoXVariables)
+        ucrPnlPairwisePlot.AddRadioButton(rdoYVariables)
+
+        'ucrChkPairwisePlot.AddToLinkedControls(rdoXVariables, bNewLinkedAddRemoveParameter:=True, bNewLinkedDisabledIfParameterMissing:=True)
+        'ucrChkPairwisePlot.AddToLinkedControls(ucrPnlPairwisePlot, rdoYVariables, bNewLinkedAddRemoveParameter:=True, bNewLinkedDisabledIfParameterMissing:=True)
 
 
-    End Sub
-
-    Private Sub Cancor()
-
-        frmMain.clsRLink.RunScript(clsRCanCor.ToScript(), 2)
-    End Sub
-
-    'Private Sub Coef()
-    '    clsRCoef.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
-    '    clsRCoef.AddParameter("data_name", Chr(34) & dlgCanonicalCorrelationAnalysis.ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
-    '    clsRCoef.AddParameter("model_name", Chr(34) & dlgCanonicalCorrelationAnalysis.strModelName & Chr(34))
-    '    clsRCoef.AddParameter("value1", Chr(34) & "coef" & Chr(34))
-    '    frmMain.clsRLink.RunScript(clsRCoef.ToScript(), 2)
-    'End Sub
-
-    Public Sub SetDefaults()
-        chkPairwisePlot.Checked = False
-        rdoXVariables.Checked = False
-        rdoYVariables.Checked = False
-        rdoXVariables.Enabled = False
-        rdoYVariables.Enabled = False
-    End Sub
-
-    Public Sub CCAOptions()
-        'If (chkCanonicalCorrelations.Checked) Then
-        '    Cancor()
-        'End If
-        'If (chkCoef.Checked) Then
-        '    Coef()
-        'End If
-        'If (chkPairwisePlot.Checked = True) Then
-        '    GGPairs()
-        'End If
     End Sub
 
     Private Sub GGPairs()
@@ -86,7 +61,6 @@ Public Class sdgCanonicalCorrelation
 
         clsRGraphics.SetFunction("ggpairs")
         clsRGraphics.AddParameter("data", clsRFunctionParameter:=clsTempFunc)
-        frmMain.clsRLink.RunScript(clsRGraphics.GetScript(), 2)
     End Sub
 
     Private Sub chkPairwisePlot_CheckedChanged(sender As Object, e As EventArgs) Handles chkPairwisePlot.CheckedChanged
@@ -118,24 +92,28 @@ Public Class sdgCanonicalCorrelation
     End Sub
 
 
-    Public Sub SetRFunction(clsNewRCanCor As RFunction, Optional bReset As Boolean = False)
+    Public Sub SetRFunction(clsNewRCoef As RFunction, clsNewRCanCor As RFunction, Optional bReset As Boolean = False)
         If Not bControlsInitialised Then
             InitialiseControls()
         End If
 
         clsRCanCor = clsNewRCanCor
+        clsRCoef = clsNewRCoef
 
         'Setting Rcode for the sub dialog
         ucrChkCanonicalCorrelations.SetRCode(clsRCanCor, bReset)
-
+        ucrChkCoefficients.SetRCode(clsRCoef, bReset)
     End Sub
 
-    Private Sub ucrSdgButtons_MouseLeave(sender As Object, e As EventArgs) Handles ucrSdgButtons.MouseLeave
-
-    End Sub
-
-    Private Sub ucrSdgButtons_ClickReturn(sender As Object, e As EventArgs) Handles ucrSdgButtons.ClickReturn
-        'If ucrChkCanonicalCorrelations.Checked Then
-        'End If
+    Public Sub CreatePlots()
+        If ucrChkCanonicalCorrelations.Checked Then
+            frmMain.clsRLink.RunScript(clsRCanCor.ToScript(), 2)
+        End If
+        If ucrChkCoefficients.Checked Then
+            frmMain.clsRLink.RunScript(clsRCoef.ToScript(), 2)
+        End If
+        If ucrChkPairwisePlot.Checked Then
+            frmMain.clsRLink.RunScript(clsRGraphics.GetScript(), 2)
+        End If
     End Sub
 End Class

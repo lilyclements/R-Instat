@@ -83,7 +83,9 @@ Public Class dlgCanonicalCorrelationAnalysis
         ' sub dialog options
         clsRCanCor.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
         clsRCanCor.AddParameter("value1", Chr(34) & "cancor" & Chr(34))
-        clsRCanCor.AddParameter("value2", Chr(34) & "coef" & Chr(34))
+
+        clsRCoef.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
+        clsRCoef.AddParameter("value1", Chr(34) & "coef" & Chr(34))
 
         ' Set default RFunction as the base function
         ucrBase.clsRsyntax.SetBaseRFunction(clsDefaultFunction.Clone())
@@ -109,14 +111,13 @@ Public Class dlgCanonicalCorrelationAnalysis
     End Sub
 
     Private Sub cmdCCAOptions_Click(sender As Object, e As EventArgs) Handles cmdCCAOptions.Click
-        sdgCanonicalCorrelation.SetRFunction(clsRCanCor, bResetSubdialog)
+        sdgCanonicalCorrelation.SetRFunction(clsRCanCor, clsRCoef, bResetSubdialog)
         bResetSubdialog = False
         sdgCanonicalCorrelation.ShowDialog()
     End Sub
 
-
     Private Sub ucrBaseCCA_clickok(sender As Object, e As EventArgs) Handles ucrBase.ClickOk
-        frmMain.clsRLink.RunScript(clsRCanCor.ToScript(), 2)
+        sdgCanonicalCorrelation.CreatePlots()
     End Sub
 
     Private Sub ucrSaveResult_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrSaveResult.ControlContentsChanged, ucrReceiverXvariables.ControlContentsChanged, ucrReceiverYvariables.ControlContentsChanged
@@ -137,6 +138,8 @@ Public Class dlgCanonicalCorrelationAnalysis
         AssignName()
         clsRCanCor.AddParameter("data_name", Chr(34) & ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
         clsRCanCor.AddParameter("model_name", Chr(34) & strModelName & Chr(34))
+        clsRCoef.AddParameter("data_name", Chr(34) & ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
+        clsRCoef.AddParameter("model_name", Chr(34) & strModelName & Chr(34))
     End Sub
 
     Private Sub ucrSaveResult_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSaveResult.ControlValueChanged, ucrSelectorCCA.ControlValueChanged
