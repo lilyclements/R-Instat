@@ -19,7 +19,8 @@ Public Class dlgCanonicalCorrelationAnalysis
     Public bFirstLoad As Boolean = True
     Private bResetSubdialog As Boolean = False
     Private bReset As Boolean = True
-    Public clsRCanCor, clsRCoef As New RFunction
+    Public clsRCanCor, clsRCoef, clsRGraphics, clsTempFunc As New RFunction
+    Private clsDefaultFunction As New RFunction
 
     Private Sub dlgCanonicalCorrelationAnalysis_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If bFirstLoad Then
@@ -35,9 +36,9 @@ Public Class dlgCanonicalCorrelationAnalysis
     End Sub
 
     Private Sub InitialiseDialog()
-        ucrBase.clsRsyntax.iCallType = 0
-        ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
         ucrBase.iHelpTopicID = 423
+        ucrBase.clsRsyntax.iCallType = 3
+        ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
 
         'cmdCCAOptions.Enabled = False
 
@@ -48,12 +49,14 @@ Public Class dlgCanonicalCorrelationAnalysis
         ucrReceiverYvariables.SetParameterIsRFunction()
         ucrReceiverYvariables.Selector = ucrSelectorCCA
         ucrReceiverYvariables.SetDataType("numeric")
+        ucrReceiverYvariables.bExcludeFromSelector = True
 
         ' X Variable Selector
         ucrReceiverXvariables.SetParameter(New RParameter("x", 1))
         ucrReceiverXvariables.SetParameterIsRFunction()
         ucrReceiverXvariables.Selector = ucrSelectorCCA
         ucrReceiverXvariables.SetDataType("numeric")
+        ucrReceiverXvariables.bExcludeFromSelector = True
 
         'ucrSaveResult
         ucrSaveResult.SetCheckBoxText("Save Result")
@@ -65,13 +68,11 @@ Public Class dlgCanonicalCorrelationAnalysis
 
     End Sub
 
-    Private Sub ReopenDialog()
-
-    End Sub
-
     Private Sub SetDefaults()
-        Dim clsDefaultFunction As New RFunction
+        clsDefaultFunction = New RFunction
         clsRCanCor = New RFunction
+        clsRGraphics = New RFunction
+
         ucrSelectorCCA.Reset()
         ucrSaveResult.Reset()
         ucrReceiverXvariables.SetMeAsReceiver()
@@ -87,12 +88,19 @@ Public Class dlgCanonicalCorrelationAnalysis
         clsRCoef.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
         clsRCoef.AddParameter("value1", Chr(34) & "coef" & Chr(34))
 
+        clsRGraphics.SetPackageName("GGally")
+        clsRGraphics.SetRCommand("ggpairs")
+        clsRGraphics.AddParameter("data", clsRFunctionParameter:=clsTempFunc)
+
         ' Set default RFunction as the base function
-        ucrBase.clsRsyntax.SetBaseRFunction(clsDefaultFunction.Clone())
+        ucrBase.clsRsyntax.SetBaseRFunction(clsDefaultFunction)
         bResetSubdialog = True
     End Sub
 
     Private Sub SetRCodeforControls(bReset As Boolean)
+        ucrReceiverXvariables.AddAdditionalCodeParameterPair(clsRGraphics, New RParameter("columns"), iAdditionalPairNo:=1)
+        ucrReceiverYvariables.AddAdditionalCodeParameterPair(clsRGraphics, New RParameter("columns"), iAdditionalPairNo:=2)
+
         SetRCode(Me, ucrBase.clsRsyntax.clsBaseFunction, bReset)
     End Sub
 
@@ -144,5 +152,9 @@ Public Class dlgCanonicalCorrelationAnalysis
 
     Private Sub ucrSaveResult_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSaveResult.ControlValueChanged, ucrSelectorCCA.ControlValueChanged
         Test()
+
+        'temp solution to fix bug in ggpairs function
+        clsTempFunc = ucrSelectorCCA.ucrAvailableDataFrames.clsCurrDataFrame.Clone()
+        clsTempFunc.AddParameter("remove_attr", "TRUE")
     End Sub
 End Class
