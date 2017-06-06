@@ -15,93 +15,60 @@
 ' along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Imports instat.Translations
 Public Class sdgCanonicalCorrelation
+    Private bControlsInitialised As Boolean = False
+    Private clsRCanCor, clsRCoef As New RFunction
     Public bFirstLoad As Boolean = True
-    Public clsRCanCor, clsRCoef As New RFunction
     Public clsRGraphics As New RSyntax
-    Private Sub sdgCanonicalCorrelation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    Public Sub sdgCanonicalCorrelation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         autoTranslate(Me)
 
         If bFirstLoad Then
-            SetDefaults()
             bFirstLoad = False
         End If
     End Sub
 
-    Private Sub Cancor()
-        clsRCanCor.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
-        clsRCanCor.AddParameter("data_name", Chr(34) & dlgCanonicalCorrelationAnalysis.ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
-        clsRCanCor.AddParameter("model_name", Chr(34) & dlgCanonicalCorrelationAnalysis.strModelName & Chr(34))
-        clsRCanCor.AddParameter("value1", Chr(34) & "cancor" & Chr(34))
-        frmMain.clsRLink.RunScript(clsRCanCor.ToScript(), 2)
+    Public Sub InitialiseControls()
+
+        ucrChkCanonicalCorrelations.SetParameter(New RParameter("value1"))
+        ucrChkCanonicalCorrelations.SetText("Canonical Correlations")
+        ucrChkCanonicalCorrelations.SetValueIfChecked(Chr(34) & "cancor" & Chr(34))
+
+        ucrChkCoefficients.SetParameter(New RParameter("value1"))
+        ucrChkCoefficients.SetText("Coefficients")
+        ucrChkCoefficients.SetValueIfChecked(Chr(34) & "coef" & Chr(34))
+
+        ucrPnlPairwisePlot.AddRadioButton(rdoNoPlot)
+        ucrPnlPairwisePlot.AddRadioButton(rdoXVariables)
+        ucrPnlPairwisePlot.AddRadioButton(rdoYVariables)
     End Sub
 
-    Private Sub Coef()
-        clsRCoef.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
-        clsRCoef.AddParameter("data_name", Chr(34) & dlgCanonicalCorrelationAnalysis.ucrSelectorCCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
-        clsRCoef.AddParameter("model_name", Chr(34) & dlgCanonicalCorrelationAnalysis.strModelName & Chr(34))
-        clsRCoef.AddParameter("value1", Chr(34) & "coef" & Chr(34))
-        frmMain.clsRLink.RunScript(clsRCoef.ToScript(), 2)
-    End Sub
 
-    Public Sub SetDefaults()
-        chkCanonicalCorrelations.Checked = True
-        chkCoef.Checked = True
-        chkPairwisePlot.Checked = False
-        rdoXVariables.Checked = False
-        rdoYVariables.Checked = False
-        rdoXVariables.Enabled = False
-        rdoYVariables.Enabled = False
-    End Sub
+    'clsRGraphics.AddParameter("columns", dlgCanonicalCorrelationAnalysis.ucrReceiverXvariables.GetVariableNames())
 
-    Public Sub CCAOptions()
-        If (chkCanonicalCorrelations.Checked) Then
-            Cancor()
+
+    Public Sub SetRFunction(clsNewRCoef As RFunction, clsNewRCanCor As RFunction, Optional bReset As Boolean = False)
+        If Not bControlsInitialised Then
+            InitialiseControls()
         End If
-        If (chkCoef.Checked) Then
-            Coef()
-        End If
-        If (chkPairwisePlot.Checked = True) Then
-            GGPairs()
-        End If
+
+        clsRCanCor = clsNewRCanCor
+        clsRCoef = clsNewRCoef
+
+        'Setting Rcode for the sub dialog
+        ucrChkCanonicalCorrelations.SetRCode(clsRCanCor, bReset)
+        ucrChkCoefficients.SetRCode(clsRCoef, bReset)
     End Sub
 
-    Private Sub GGPairs()
-        Dim clsTempFunc As RFunction
-
-        'temp solution to fix bug in ggpairs function
-        clsTempFunc = dlgCanonicalCorrelationAnalysis.ucrSelectorCCA.ucrAvailableDataFrames.clsCurrDataFrame.Clone()
-        clsTempFunc.AddParameter("remove_attr", "TRUE")
-
-        clsRGraphics.SetFunction("ggpairs")
-        clsRGraphics.AddParameter("data", clsRFunctionParameter:=clsTempFunc)
-        frmMain.clsRLink.RunScript(clsRGraphics.GetScript(), 2)
-    End Sub
-
-    Private Sub chkPairwisePlot_CheckedChanged(sender As Object, e As EventArgs) Handles chkPairwisePlot.CheckedChanged
-        If chkPairwisePlot.Checked Then
-            rdoXVariables.Enabled = True
-            rdoYVariables.Enabled = True
-            rdoXVariables.Checked = True
-        Else
-            rdoXVariables.Checked = False
-            rdoXVariables.Enabled = False
-            rdoYVariables.Enabled = False
+    Public Sub CreatePlots()
+        If ucrChkCanonicalCorrelations.Checked Then
+            frmMain.clsRLink.RunScript(clsRCanCor.ToScript(), 2)
         End If
-    End Sub
-
-    Private Sub rdoXVariables_CheckedChanged(sender As Object, e As EventArgs) Handles rdoXVariables.CheckedChanged
-        If rdoXVariables.Checked Then
-            clsRGraphics.AddParameter("columns", dlgCanonicalCorrelationAnalysis.ucrReceiverXvariables.GetVariableNames())
-        Else
-            clsRGraphics.RemoveParameter("columns")
+        If ucrChkCoefficients.Checked Then
+            frmMain.clsRLink.RunScript(clsRCoef.ToScript(), 2)
         End If
-    End Sub
-
-    Private Sub rdoYVariables_CheckedChanged(sender As Object, e As EventArgs) Handles rdoYVariables.CheckedChanged
-        If rdoYVariables.Checked Then
-            clsRGraphics.AddParameter("columns", dlgCanonicalCorrelationAnalysis.ucrReceiverYvariables.GetVariableNames())
-        Else
-            clsRGraphics.RemoveParameter("columns")
+        If rdoXVariables.Checked OrElse rdoYVariables.Checked Then
+            frmMain.clsRLink.RunScript(clsRGraphics.GetScript(), 2)
         End If
     End Sub
 End Class
