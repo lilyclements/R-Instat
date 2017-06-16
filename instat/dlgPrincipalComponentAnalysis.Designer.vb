@@ -50,7 +50,7 @@ Partial Class dlgPrincipalComponentAnalysis
         Me.cmdPCAOptions.Size = New System.Drawing.Size(106, 23)
         Me.cmdPCAOptions.TabIndex = 6
         Me.cmdPCAOptions.Tag = "PCA_Options..."
-        Me.cmdPCAOptions.Text = "PCA Options..."
+        Me.cmdPCAOptions.Text = "Options..."
         Me.cmdPCAOptions.UseVisualStyleBackColor = True
         '
         'lblComponents
