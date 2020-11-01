@@ -122,7 +122,6 @@ Public Class frmMain
 
             'Sets up the Recent items
             clsRecentItems.setToolStripItems(mnuFile, mnuTbOpen, mnuTbLast10Dialogs, sepStart, sepEnd)
-            clsRecentItems.SetDataViewWindow(ucrDataViewer)
             'checks existence of MRU list
             clsRecentItems.checkOnLoad()
             Cursor = Cursors.Default
@@ -1409,7 +1408,7 @@ Public Class frmMain
         ctrActive = ucrDataFrameMeta
     End Sub
 
-    Private Sub mnuClimaticFileImportfromIRIDataLibrary_Click(sender As Object, e As EventArgs) Handles mnuClimaticFileImportfromIRIDataLibrary.Click
+    Private Sub mnuClimaticFileOpenGriddedData_Click(sender As Object, e As EventArgs) Handles mnuClimaticFileOpenGriddedData.Click
         dlgImportGriddedData.ShowDialog()
     End Sub
 

@@ -29,7 +29,8 @@ Partial Class dlgFindNonnumericValues
         Me.ucrReceiverColumn = New instat.ucrReceiverSingle()
         Me.ucrSelectorShowNonNumericValues = New instat.ucrSelectorByDataFrameAddRemove()
         Me.ucrBase = New instat.ucrButtons()
-        Me.ucrSaveColumn = New instat.ucrSave()
+        Me.ucrInputColumnName = New instat.ucrInputTextBox()
+        Me.lblColumnName = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'lblColumn
@@ -71,22 +72,31 @@ Partial Class dlgFindNonnumericValues
         resources.ApplyResources(Me.ucrBase, "ucrBase")
         Me.ucrBase.Name = "ucrBase"
         '
-        'ucrSaveColumn
+        'ucrInputColumnName
         '
-        resources.ApplyResources(Me.ucrSaveColumn, "ucrSaveColumn")
-        Me.ucrSaveColumn.Name = "ucrSaveColumn"
+        Me.ucrInputColumnName.AddQuotesIfUnrecognised = True
+        Me.ucrInputColumnName.IsMultiline = False
+        Me.ucrInputColumnName.IsReadOnly = False
+        resources.ApplyResources(Me.ucrInputColumnName, "ucrInputColumnName")
+        Me.ucrInputColumnName.Name = "ucrInputColumnName"
+        '
+        'lblColumnName
+        '
+        resources.ApplyResources(Me.lblColumnName, "lblColumnName")
+        Me.lblColumnName.Name = "lblColumnName"
         '
         'dlgFindNonnumericValues
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.ucrSaveColumn)
+        Me.Controls.Add(Me.ucrInputColumnName)
         Me.Controls.Add(Me.ucrChkFilterNonumerics)
         Me.Controls.Add(Me.ucrChkShowSummary)
         Me.Controls.Add(Me.lblColumn)
         Me.Controls.Add(Me.ucrReceiverColumn)
         Me.Controls.Add(Me.ucrSelectorShowNonNumericValues)
         Me.Controls.Add(Me.ucrBase)
+        Me.Controls.Add(Me.lblColumnName)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.MinimizeBox = False
         Me.Name = "dlgFindNonnumericValues"
@@ -101,5 +111,6 @@ Partial Class dlgFindNonnumericValues
     Friend WithEvents ucrChkShowSummary As ucrCheck
     Friend WithEvents ucrReceiverColumn As ucrReceiverSingle
     Friend WithEvents ucrChkFilterNonumerics As ucrCheck
-    Friend WithEvents ucrSaveColumn As ucrSave
+    Friend WithEvents ucrInputColumnName As ucrInputTextBox
+    Friend WithEvents lblColumnName As Label
 End Class

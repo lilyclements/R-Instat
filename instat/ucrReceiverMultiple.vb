@@ -92,7 +92,6 @@ Public Class ucrReceiverMultiple
                 Selector.RemoveFromVariablesList(strTempItem)
             Next
             OnSelectionChanged()
-            MyBase.RemoveSelected()
         End If
     End Sub
 
@@ -104,6 +103,7 @@ Public Class ucrReceiverMultiple
             strItems.Add(lviVar.Text)
         Next
         Remove(strItems.ToArray())
+        'RemoveSelected()
     End Sub
 
     Public Overrides Function IsEmpty() As Boolean

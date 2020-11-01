@@ -64,6 +64,7 @@ Public Class sdgCalculationsSummmary
         ucrCalcSummary.ucrReceiverForCalculation.bAttachedToPrimaryDataFrame = False
 
         'temp until working
+        ucrCalcSummary.chkSaveResultInto.Visible = False
         ucrCalcSummary.ucrSaveResultInto.Visible = False
         'ucrCalcSummary.ucrTryModelling.Visible = False
 

@@ -55,7 +55,6 @@ Partial Class dlgColumnStats
         Me.ucrReceiverSelectedVariables = New instat.ucrReceiverMultiple()
         Me.ucrSelectorForColumnStatistics = New instat.ucrSelectorByDataFrameAddRemove()
         Me.ucrBase = New instat.ucrButtons()
-        Me.cmdMissingOptions = New System.Windows.Forms.Button()
         Me.grpOptions.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -71,7 +70,6 @@ Partial Class dlgColumnStats
         '
         'grpOptions
         '
-        Me.grpOptions.Controls.Add(Me.cmdMissingOptions)
         Me.grpOptions.Controls.Add(Me.ucrChkOriginalLevel)
         Me.grpOptions.Controls.Add(Me.ucrChkStoreResults)
         Me.grpOptions.Controls.Add(Me.ucrChkOmitMissing)
@@ -171,13 +169,6 @@ Partial Class dlgColumnStats
         resources.ApplyResources(Me.ucrBase, "ucrBase")
         Me.ucrBase.Name = "ucrBase"
         '
-        'cmdMissingOptions
-        '
-        resources.ApplyResources(Me.cmdMissingOptions, "cmdMissingOptions")
-        Me.cmdMissingOptions.Name = "cmdMissingOptions"
-        Me.cmdMissingOptions.Tag = "MissingOptions"
-        Me.cmdMissingOptions.UseVisualStyleBackColor = True
-        '
         'dlgColumnStats
         '
         resources.ApplyResources(Me, "$this")
@@ -220,5 +211,4 @@ Partial Class dlgColumnStats
     Friend WithEvents ucrChkOriginalLevel As ucrCheck
     Friend WithEvents ucrChkWeights As ucrCheck
     Friend WithEvents ucrReceiverWeights As ucrReceiverSingle
-    Friend WithEvents cmdMissingOptions As Button
 End Class
