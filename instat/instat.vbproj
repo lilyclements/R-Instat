@@ -189,6 +189,12 @@
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="clsBlockReader.vb" />
+    <Compile Include="dlgApsimx.Designer.vb">
+      <DependentUpon>dlgApsimx.vb</DependentUpon>
+    </Compile>
+    <Compile Include="dlgApsimx.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="dlgClusterAnalysis.Designer.vb">
       <DependentUpon>dlgClusterAnalysis.vb</DependentUpon>
     </Compile>
@@ -1701,12 +1707,6 @@
     <Compile Include="dlgPermuteColumn.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="dlgPopulationPyramids.Designer.vb">
-      <DependentUpon>dlgPopulationPyramids.vb</DependentUpon>
-    </Compile>
-    <Compile Include="dlgPopulationPyramids.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="dlgPrincipalComponentAnalysis.Designer.vb">
       <DependentUpon>dlgPrincipalComponentAnalysis.vb</DependentUpon>
     </Compile>
@@ -2749,12 +2749,6 @@
     <Compile Include="ucrSave.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ucrSaveGraph.Designer.vb">
-      <DependentUpon>ucrSaveGraph.vb</DependentUpon>
-    </Compile>
-    <Compile Include="ucrSaveGraph.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="ucrSaveModel.Designer.vb">
       <DependentUpon>ucrSaveModel.vb</DependentUpon>
     </Compile>
@@ -2893,6 +2887,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="dlgApsimx.resx">
+      <DependentUpon>dlgApsimx.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="dlgAugment.resx">
       <DependentUpon>dlgAugment.vb</DependentUpon>
     </EmbeddedResource>
@@ -3811,12 +3808,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="dlgPICSATemperature.resx">
       <DependentUpon>dlgPICSATemperature.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="dlgPopulationPyramids.resx">
-      <DependentUpon>dlgPopulationPyramids.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="dlgPopulationPyramids.sw-KE.resx">
-      <DependentUpon>dlgPopulationPyramids.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="dlgPrincipalComponentAnalysis.resx">
       <DependentUpon>dlgPrincipalComponentAnalysis.vb</DependentUpon>
@@ -5082,12 +5073,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ucrSave.sw-KE.resx">
       <DependentUpon>ucrSave.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ucrSaveGraph.resx">
-      <DependentUpon>ucrSaveGraph.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ucrSaveGraph.sw-KE.resx">
-      <DependentUpon>ucrSaveGraph.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ucrSaveModel.resx">
       <DependentUpon>ucrSaveModel.vb</DependentUpon>
