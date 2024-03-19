@@ -7,7 +7,6 @@ Public Class dlgInstallRPackage
     Private clsRepositoryFunction As New RFunction
     Private clsBeforeOptionsFunc As New RFunction
     Private clsAfterOptionsFunc As New RFunction
-    Private clsPasteFunction As New RFunction
     Private clsDummyFunction As New RFunction
 
     Private Sub dlgRPackages_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -38,7 +37,6 @@ Public Class dlgInstallRPackage
         ucrInputMessage.SetLinkedDisplayControl(cmdCheck)
 
         ucrPnlRPackages.AddToLinkedControls(ucrInputRepositoryName, {rdoRPackage}, bNewLinkedHideIfParameterMissing:=True)
-        ucrPnlRPackages.AddToLinkedControls(ucrInputMessage, {rdoCRAN}, bNewLinkedHideIfParameterMissing:=True)
 
         CheckEnable()
     End Sub
@@ -57,8 +55,6 @@ Public Class dlgInstallRPackage
 
         clsBeforeOptionsFunc.SetRCommand("options")
         clsBeforeOptionsFunc.AddParameter(strParameterName:="warn", strParameterValue:="2")
-
-        clsPasteFunction.SetRCommand("paste0")
 
         clsRepositoryFunction.SetRCommand("install_github")
         clsRepositoryFunction.SetPackageName("devtools")
@@ -98,8 +94,14 @@ Public Class dlgInstallRPackage
         Dim expOutput As SymbolicExpression
         Dim chrOutput As CharacterVector
 
-        clsPackageCheck.SetRCommand("package_check")
-        clsPackageCheck.AddParameter("package", Chr(34) & ucrInputTextBoxRPackage.GetText() & Chr(34))
+        If rdoCRAN.Checked Then
+            clsPackageCheck.SetRCommand("package_check")
+            clsPackageCheck.AddParameter("package", Chr(34) & ucrInputTextBoxRPackage.GetText() & Chr(34))
+        ElseIf rdoRPackage.Checked Then
+            clsPackageCheck.SetRCommand("check_github_repo")
+            clsPackageCheck.AddParameter("repo", Chr(34) & ucrInputTextBoxRPackage.GetText() & Chr(34))
+            clsPackageCheck.AddParameter("owner", Chr(34) & ucrInputRepositoryName.GetText() & Chr(34))
+        End If
 
         expOutput = frmMain.clsRLink.RunInternalScriptGetValue(clsPackageCheck.ToScript(), bSilent:=True)
 
@@ -116,22 +118,37 @@ Public Class dlgInstallRPackage
 
         Select Case chrOutput(0)
             Case "1"
-                If chrOutput.Count = 4 Then
-                    If chrOutput(1) = "0" Then
-                        ucrInputMessage.SetText("Package is installed and up to date.")
-                        ucrInputMessage.txtInput.BackColor = Color.Yellow
-                    ElseIf chrOutput(1) = "-1" Then
-                        ucrInputMessage.SetText("Package is installed. Newer version available: " & chrOutput(3) & " (current: " & chrOutput(2) & ").")
+                If rdoCRAN.Checked Then
+                    If chrOutput.Count = 4 Then
+                        If chrOutput(1) = "0" Then
+                            ucrInputMessage.SetText("Package is installed and up to date.")
+                            ucrInputMessage.txtInput.BackColor = Color.Yellow
+                        ElseIf chrOutput(1) = "-1" Then
+                            ucrInputMessage.SetText("Package is installed. Newer version available: " & chrOutput(3) & " (current: " & chrOutput(2) & ").")
+                        End If
+                    Else
+                        ucrInputMessage.SetText("Package is installed. No version information available.")
                     End If
-                Else
-                    ucrInputMessage.SetText("Package is installed. No version information available.")
+                ElseIf rdoRPackage.Checked Then
+                    ucrInputMessage.SetText("Package exists in the repo and is ready for installation")
+                    ucrInputMessage.txtInput.BackColor = Color.LightGreen
                 End If
             Case "2"
-                ucrInputMessage.SetText("Package exists and not currently installed.")
-                ucrInputMessage.txtInput.BackColor = Color.LightGreen
+                If rdoCRAN.Checked Then
+                    ucrInputMessage.SetText("Package exists and not currently installed.")
+                    ucrInputMessage.txtInput.BackColor = Color.LightGreen
+                ElseIf rdoRPackage.Checked Then
+                    ucrInputMessage.SetText("Package exists in the repo but is not in the R language")
+                    ucrInputMessage.txtInput.BackColor = Color.LightGreen
+                End If
             Case "3"
-                ucrInputMessage.SetText("Package is installed but not a current CRAN package")
-                ucrInputMessage.txtInput.BackColor = Color.LightBlue
+                If rdoCRAN.Checked Then
+                    ucrInputMessage.SetText("Package is installed but not a current CRAN package")
+                    ucrInputMessage.txtInput.BackColor = Color.LightBlue
+                ElseIf rdoRPackage.Checked Then
+                    ucrInputMessage.SetText("Not a package in the given repo. Perhaps spelled wrongly?")
+                    ucrInputMessage.txtInput.BackColor = Color.LightCoral
+                End If
             Case "4"
                 ucrInputMessage.SetText("Not a current CRAN package. Perhaps spelled wrongly, or archived?")
                 ucrInputMessage.txtInput.BackColor = Color.LightSkyBlue
@@ -175,13 +192,9 @@ Public Class dlgInstallRPackage
 
     Private Sub GithubOption()
         If Not (ucrInputTextBoxRPackage.IsEmpty AndAlso ucrInputRepositoryName.IsEmpty) Then
-            clsPasteFunction.AddParameter("paste", Chr(34) & ucrInputRepositoryName.GetText & "/" & ucrInputTextBoxRPackage.GetText & Chr(34), bIncludeArgumentName:=False)
-
-            clsRepositoryFunction.AddParameter("package", clsRFunctionParameter:=clsPasteFunction, iPosition:=0, bIncludeArgumentName:=False)
-
+            clsRepositoryFunction.AddParameter("paste", Chr(34) & ucrInputRepositoryName.GetText & "/" & ucrInputTextBoxRPackage.GetText & Chr(34), bIncludeArgumentName:=False)
         Else
-            clsPasteFunction.RemoveParameterByName("paste")
-            clsRepositoryFunction.RemoveParameterByName("package")
+            clsRepositoryFunction.RemoveParameterByName("paste")
         End If
     End Sub
 
