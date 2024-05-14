@@ -15,6 +15,7 @@
 ' along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Imports instat.Translations
+Imports System.IO
 Public Class dlgExportClimaticDefinitions
     Private bFirstLoad As Boolean = True
     Private bReset As Boolean = True
@@ -122,7 +123,7 @@ Public Class dlgExportClimaticDefinitions
 
         ucrInputCountry.SetParameter(New RParameter("country", 19))
 
-        ucrInputTokenPath.SetParameter(New RParameter("file", 0))
+        ucrInputTokenPath.SetParameter(New RParameter("filename", 0))
 
     End Sub
 
@@ -139,7 +140,6 @@ Public Class dlgExportClimaticDefinitions
         bResetSubdialog = True
 
         ucrSelectorExportDefinitions.Reset()
-        'ucrReceiverData.SetMeAsReceiver()
 
         clsDummyFunction.AddParameter("rain", "False", iPosition:=0)
         clsDummyFunction.AddParameter("temp", "False", iPosition:=1)
@@ -216,7 +216,6 @@ Public Class dlgExportClimaticDefinitions
     AndAlso Not ucrReceiverYear.IsEmpty _
     AndAlso Not ucrInputCountry.IsEmpty _
     AndAlso Not ucrInputStationID.IsEmpty _
-    AndAlso ucrChkIncludeSummaryData.Checked _
     AndAlso Not ucrInputTokenPath.IsEmpty _
     AndAlso (
         ((ucrChkCropSuccessProp.Checked OrElse ucrChkSeasonStartProp.Checked) AndAlso Not ucrReceiverCropData.IsEmpty) _
@@ -332,6 +331,7 @@ Public Class dlgExportClimaticDefinitions
             clsExportRinstatToBucketFunction.RemoveParameterByName("station_id")
         End If
     End Sub
+
     Private Sub EnableDisableDefineButton()
         cmdDefine.Enabled = ucrChkIncludeSummaryData.Checked AndAlso (ucrChkAnnualRainfall.Checked OrElse ucrChkAnnualTemp.Checked OrElse ucrChkCropSuccessProp.Checked OrElse ucrChkExtremes.Checked OrElse ucrChkMonthlyTemp.Checked OrElse ucrChkSeasonStartProp.Checked)
         ucrReceiverDataYearMonth.Visible = ucrChkMonthlyTemp.Checked
@@ -347,31 +347,20 @@ Public Class dlgExportClimaticDefinitions
         EnableDisableDefineButton()
     End Sub
 
-    Private Sub SelectFileToSave()
-        Using dlgSave As New SaveFileDialog
-            dlgSave.Title = "Save JSON File"
-            dlgSave.Filter = "JSON Files|*.json"
-            If ucrInputTokenPath.GetText() <> "" Then
-                dlgSave.InitialDirectory = ucrInputTokenPath.GetText().Replace("/", "\")
-            Else
-                dlgSave.InitialDirectory = frmMain.clsInstatOptions.strWorkingDirectory
-            End If
-            If dlgSave.ShowDialog() = DialogResult.OK Then
-                ucrInputTokenPath.SetName(dlgSave.FileName.Replace("\", "/"))
-            End If
-            TestOkEnabled()
-        End Using
-    End Sub
-
-    Private Sub ucrInputTokenPath_Click(sender As Object, e As EventArgs) Handles ucrInputTokenPath.Click
-        If ucrInputTokenPath.IsEmpty() Then
-            SelectFileToSave()
-        End If
-    End Sub
-
     Private Sub cmdChooseFile_Click(sender As Object, e As EventArgs) Handles cmdChooseFile.Click
-        SelectFileToSave()
+        Using dlgOpen As New OpenFileDialog
+            dlgOpen.Filter = "JSON Files|*.json"
+            dlgOpen.Title = "Import JSON File"
+
+            dlgOpen.InitialDirectory = Path.GetDirectoryName(Replace(ucrInputTokenPath.GetText(), "/", "\"))
+
+            If dlgOpen.ShowDialog() = DialogResult.OK AndAlso dlgOpen.FileName <> "" Then
+                ucrInputTokenPath.SetName(Replace(dlgOpen.FileName, "\", "/"))
+            End If
+        End Using
+
     End Sub
+
     Private Sub ucrReceiverData_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrReceiverData.ControlContentsChanged, ucrReceiverRain.ControlContentsChanged,
             ucrReceiverMaxTemp.ControlContentsChanged, ucrReceiverMinTemp.ControlContentsChanged, ucrReceiverCropData.ControlContentsChanged, ucrReceiverDataYearMonth.ControlContentsChanged, ucrReceiverDataYear.ControlContentsChanged,
             ucrReceiverMonth.ControlContentsChanged, ucrReceiverYear.ControlContentsChanged, ucrChkSeasonStartProp.ControlContentsChanged, ucrInputCountry.ControlContentsChanged, ucrInputStationID.ControlContentsChanged, ucrChkIncludeSummaryData.ControlContentsChanged,
