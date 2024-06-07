@@ -111,8 +111,8 @@ Public Class dlgExportClimaticDefinitions
         ucrChkIncludeSummaryData.SetRDefault("FALSE")
 
         ucrInputStationID.SetParameter(New RParameter("station_id", 18))
-
-        ucrInputCountry.SetParameter(New RParameter("country", 19))
+        ucrInputDefinitionID.SetParameter(New RParameter("definitions_id", 19))
+        ucrInputCountry.SetParameter(New RParameter("country", 20))
     End Sub
 
     Private Sub SetDefaults()
@@ -156,7 +156,6 @@ Public Class dlgExportClimaticDefinitions
         clsReformatCropSuccessFunction.SetRCommand("reformat_crop_success")
         clsReformatCropSuccessFunction.SetAssignTo("crop_prop")
 
-
         clsSummariesFunction.SetRCommand("c")
 
         clsExportRinstatToBucketFunction.SetPackageName("epicsawrap")
@@ -180,6 +179,7 @@ Public Class dlgExportClimaticDefinitions
         ucrSelectorExportDefinitions.SetRCode(clsExportRinstatToBucketFunction)
 
         ucrInputStationID.SetRCode(clsExportRinstatToBucketFunction, bReset)
+        ucrInputDefinitionID.SetRCode(clsExportRinstatToBucketFunction, bReset)
         ucrInputCountry.SetRCode(clsExportRinstatToBucketFunction, bReset)
         ucrChkIncludeSummaryData.SetRCode(clsExportRinstatToBucketFunction, bReset)
         If bReset Then
@@ -196,13 +196,15 @@ Public Class dlgExportClimaticDefinitions
 
     Private Sub TestOkEnabled()
         ucrBase.OKEnabled(Not ucrReceiverData.IsEmpty _
-                             AndAlso Not ucrReceiverMonth.IsEmpty _
                              AndAlso Not ucrReceiverYear.IsEmpty _
                              AndAlso Not ucrReceiverCropData.IsEmpty _
                              AndAlso Not ucrReceiverRain.IsEmpty _
                              AndAlso Not ucrReceiverMinTemp.IsEmpty _
                              AndAlso Not ucrReceiverDataYear.IsEmpty _
                              AndAlso Not ucrReceiverDataYearMonth.IsEmpty _
+                             AndAlso Not ucrInputStationID.IsEmpty _
+                             AndAlso Not ucrInputCountry.IsEmpty _
+                             AndAlso Not ucrInputDefinitionID.IsEmpty _
                              AndAlso Not ucrReceiverMaxTemp.IsEmpty
                              )
     End Sub
@@ -217,7 +219,7 @@ Public Class dlgExportClimaticDefinitions
 
     Private Sub ucrReceiverData_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrReceiverData.ControlContentsChanged, ucrReceiverRain.ControlContentsChanged,
             ucrReceiverMaxTemp.ControlContentsChanged, ucrReceiverMinTemp.ControlContentsChanged, ucrReceiverCropData.ControlContentsChanged, ucrReceiverDataYearMonth.ControlContentsChanged, ucrReceiverDataYear.ControlContentsChanged,
-            ucrReceiverMonth.ControlContentsChanged, ucrReceiverYear.ControlContentsChanged
+            ucrReceiverYear.ControlContentsChanged, ucrInputStationID.ControlContentsChanged, ucrInputCountry.ControlContentsChanged, ucrInputDefinitionID.ControlContentsChanged
         TestOkEnabled()
     End Sub
     Private Sub ucrBase_ClickReset(sender As Object, e As EventArgs) Handles ucrBase.ClickReset
@@ -296,9 +298,17 @@ Public Class dlgExportClimaticDefinitions
 
     Private Sub ucrInputCountry_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrInputCountry.ControlValueChanged
         If Not ucrInputCountry.IsEmpty Then
-            clsExportRinstatToBucketFunction.AddParameter("country", Chr(34) & ucrInputCountry.GetText & Chr(34), iPosition:=19)
+            clsExportRinstatToBucketFunction.AddParameter("country", Chr(34) & ucrInputCountry.GetText & Chr(34), iPosition:=20)
         Else
             clsExportRinstatToBucketFunction.RemoveParameterByName("country")
+        End If
+    End Sub
+
+    Private Sub ucrInputDefinitionID_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrInputDefinitionID.ControlValueChanged
+        If Not ucrInputDefinitionID.IsEmpty Then
+            clsExportRinstatToBucketFunction.AddParameter("definitions_id", Chr(34) & ucrInputDefinitionID.GetText & Chr(34), iPosition:=18)
+        Else
+            clsExportRinstatToBucketFunction.RemoveParameterByName("definitions_id")
         End If
     End Sub
 

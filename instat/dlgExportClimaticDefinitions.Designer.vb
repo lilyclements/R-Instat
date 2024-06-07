@@ -36,7 +36,6 @@ Partial Class dlgExportClimaticDefinitions
         Me.ucrChkCropSuccessProp = New instat.ucrCheck()
         Me.ucrChkAnnualTemp = New instat.ucrCheck()
         Me.ucrChkAnnualRainfall = New instat.ucrCheck()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.lblYear = New System.Windows.Forms.Label()
         Me.lblMonth = New System.Windows.Forms.Label()
         Me.ucrReceiverMonth = New instat.ucrReceiverSingle()
@@ -56,13 +55,15 @@ Partial Class dlgExportClimaticDefinitions
         Me.lblCountry = New System.Windows.Forms.Label()
         Me.lblStationID = New System.Windows.Forms.Label()
         Me.cmdDefine = New System.Windows.Forms.Button()
+        Me.lblDefinitionID = New System.Windows.Forms.Label()
+        Me.ucrInputDefinitionID = New instat.ucrInputTextBox()
         Me.grpSummaries.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblData
         '
         Me.lblData.AutoSize = True
-        Me.lblData.Location = New System.Drawing.Point(500, 31)
+        Me.lblData.Location = New System.Drawing.Point(493, 31)
         Me.lblData.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblData.Name = "lblData"
         Me.lblData.Size = New System.Drawing.Size(48, 20)
@@ -72,7 +73,7 @@ Partial Class dlgExportClimaticDefinitions
         'lblMinTemp
         '
         Me.lblMinTemp.AutoSize = True
-        Me.lblMinTemp.Location = New System.Drawing.Point(500, 355)
+        Me.lblMinTemp.Location = New System.Drawing.Point(493, 336)
         Me.lblMinTemp.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblMinTemp.Name = "lblMinTemp"
         Me.lblMinTemp.Size = New System.Drawing.Size(82, 20)
@@ -82,7 +83,7 @@ Partial Class dlgExportClimaticDefinitions
         'lblRain
         '
         Me.lblRain.AutoSize = True
-        Me.lblRain.Location = New System.Drawing.Point(500, 289)
+        Me.lblRain.Location = New System.Drawing.Point(493, 275)
         Me.lblRain.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblRain.Name = "lblRain"
         Me.lblRain.Size = New System.Drawing.Size(46, 20)
@@ -92,7 +93,7 @@ Partial Class dlgExportClimaticDefinitions
         'lblDataByYear
         '
         Me.lblDataByYear.AutoSize = True
-        Me.lblDataByYear.Location = New System.Drawing.Point(500, 95)
+        Me.lblDataByYear.Location = New System.Drawing.Point(493, 92)
         Me.lblDataByYear.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblDataByYear.Name = "lblDataByYear"
         Me.lblDataByYear.Size = New System.Drawing.Size(108, 20)
@@ -102,7 +103,7 @@ Partial Class dlgExportClimaticDefinitions
         'lblDataByYearMonth
         '
         Me.lblDataByYearMonth.AutoSize = True
-        Me.lblDataByYearMonth.Location = New System.Drawing.Point(495, 162)
+        Me.lblDataByYearMonth.Location = New System.Drawing.Point(493, 153)
         Me.lblDataByYearMonth.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblDataByYearMonth.Name = "lblDataByYearMonth"
         Me.lblDataByYearMonth.Size = New System.Drawing.Size(188, 20)
@@ -112,7 +113,7 @@ Partial Class dlgExportClimaticDefinitions
         'lblCropData
         '
         Me.lblCropData.AutoSize = True
-        Me.lblCropData.Location = New System.Drawing.Point(500, 226)
+        Me.lblCropData.Location = New System.Drawing.Point(493, 214)
         Me.lblCropData.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblCropData.Name = "lblCropData"
         Me.lblCropData.Size = New System.Drawing.Size(86, 20)
@@ -122,7 +123,7 @@ Partial Class dlgExportClimaticDefinitions
         'lblMaxTemp
         '
         Me.lblMaxTemp.AutoSize = True
-        Me.lblMaxTemp.Location = New System.Drawing.Point(500, 420)
+        Me.lblMaxTemp.Location = New System.Drawing.Point(493, 397)
         Me.lblMaxTemp.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblMaxTemp.Name = "lblMaxTemp"
         Me.lblMaxTemp.Size = New System.Drawing.Size(86, 20)
@@ -142,7 +143,7 @@ Partial Class dlgExportClimaticDefinitions
         Me.grpSummaries.Name = "grpSummaries"
         Me.grpSummaries.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.grpSummaries.Size = New System.Drawing.Size(470, 194)
-        Me.grpSummaries.TabIndex = 19
+        Me.grpSummaries.TabIndex = 25
         Me.grpSummaries.TabStop = False
         Me.grpSummaries.Text = "Summaries"
         '
@@ -206,20 +207,10 @@ Partial Class dlgExportClimaticDefinitions
         Me.ucrChkAnnualRainfall.Size = New System.Drawing.Size(224, 52)
         Me.ucrChkAnnualRainfall.TabIndex = 0
         '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.Label1.Location = New System.Drawing.Point(120, 720)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(0, 20)
-        Me.Label1.TabIndex = 25
-        '
         'lblYear
         '
         Me.lblYear.AutoSize = True
-        Me.lblYear.Location = New System.Drawing.Point(507, 480)
+        Me.lblYear.Location = New System.Drawing.Point(493, 458)
         Me.lblYear.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblYear.Name = "lblYear"
         Me.lblYear.Size = New System.Drawing.Size(47, 20)
@@ -229,7 +220,7 @@ Partial Class dlgExportClimaticDefinitions
         'lblMonth
         '
         Me.lblMonth.AutoSize = True
-        Me.lblMonth.Location = New System.Drawing.Point(506, 538)
+        Me.lblMonth.Location = New System.Drawing.Point(493, 519)
         Me.lblMonth.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblMonth.Name = "lblMonth"
         Me.lblMonth.Size = New System.Drawing.Size(58, 20)
@@ -240,7 +231,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverMonth.AutoSize = True
         Me.ucrReceiverMonth.frmParent = Me
-        Me.ucrReceiverMonth.Location = New System.Drawing.Point(500, 565)
+        Me.ucrReceiverMonth.Location = New System.Drawing.Point(493, 544)
         Me.ucrReceiverMonth.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverMonth.Name = "ucrReceiverMonth"
         Me.ucrReceiverMonth.Selector = Nothing
@@ -253,7 +244,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverYear.AutoSize = True
         Me.ucrReceiverYear.frmParent = Me
-        Me.ucrReceiverYear.Location = New System.Drawing.Point(501, 505)
+        Me.ucrReceiverYear.Location = New System.Drawing.Point(493, 483)
         Me.ucrReceiverYear.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverYear.Name = "ucrReceiverYear"
         Me.ucrReceiverYear.Selector = Nothing
@@ -270,13 +261,13 @@ Partial Class dlgExportClimaticDefinitions
         Me.ucrChkIncludeSummaryData.Margin = New System.Windows.Forms.Padding(9)
         Me.ucrChkIncludeSummaryData.Name = "ucrChkIncludeSummaryData"
         Me.ucrChkIncludeSummaryData.Size = New System.Drawing.Size(332, 48)
-        Me.ucrChkIncludeSummaryData.TabIndex = 20
+        Me.ucrChkIncludeSummaryData.TabIndex = 26
         '
         'ucrReceiverDataYear
         '
         Me.ucrReceiverDataYear.AutoSize = True
         Me.ucrReceiverDataYear.frmParent = Me
-        Me.ucrReceiverDataYear.Location = New System.Drawing.Point(496, 122)
+        Me.ucrReceiverDataYear.Location = New System.Drawing.Point(493, 117)
         Me.ucrReceiverDataYear.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverDataYear.Name = "ucrReceiverDataYear"
         Me.ucrReceiverDataYear.Selector = Nothing
@@ -289,7 +280,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverDataYearMonth.AutoSize = True
         Me.ucrReceiverDataYearMonth.frmParent = Me
-        Me.ucrReceiverDataYearMonth.Location = New System.Drawing.Point(496, 188)
+        Me.ucrReceiverDataYearMonth.Location = New System.Drawing.Point(493, 178)
         Me.ucrReceiverDataYearMonth.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverDataYearMonth.Name = "ucrReceiverDataYearMonth"
         Me.ucrReceiverDataYearMonth.Selector = Nothing
@@ -302,7 +293,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverCropData.AutoSize = True
         Me.ucrReceiverCropData.frmParent = Me
-        Me.ucrReceiverCropData.Location = New System.Drawing.Point(496, 251)
+        Me.ucrReceiverCropData.Location = New System.Drawing.Point(493, 239)
         Me.ucrReceiverCropData.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverCropData.Name = "ucrReceiverCropData"
         Me.ucrReceiverCropData.Selector = Nothing
@@ -315,7 +306,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverRain.AutoSize = True
         Me.ucrReceiverRain.frmParent = Me
-        Me.ucrReceiverRain.Location = New System.Drawing.Point(496, 315)
+        Me.ucrReceiverRain.Location = New System.Drawing.Point(493, 300)
         Me.ucrReceiverRain.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverRain.Name = "ucrReceiverRain"
         Me.ucrReceiverRain.Selector = Nothing
@@ -328,7 +319,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverMinTemp.AutoSize = True
         Me.ucrReceiverMinTemp.frmParent = Me
-        Me.ucrReceiverMinTemp.Location = New System.Drawing.Point(496, 382)
+        Me.ucrReceiverMinTemp.Location = New System.Drawing.Point(493, 361)
         Me.ucrReceiverMinTemp.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverMinTemp.Name = "ucrReceiverMinTemp"
         Me.ucrReceiverMinTemp.Selector = Nothing
@@ -341,7 +332,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverMaxTemp.AutoSize = True
         Me.ucrReceiverMaxTemp.frmParent = Me
-        Me.ucrReceiverMaxTemp.Location = New System.Drawing.Point(496, 448)
+        Me.ucrReceiverMaxTemp.Location = New System.Drawing.Point(493, 422)
         Me.ucrReceiverMaxTemp.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverMaxTemp.Name = "ucrReceiverMaxTemp"
         Me.ucrReceiverMaxTemp.Selector = Nothing
@@ -354,7 +345,7 @@ Partial Class dlgExportClimaticDefinitions
         '
         Me.ucrReceiverData.AutoSize = True
         Me.ucrReceiverData.frmParent = Me
-        Me.ucrReceiverData.Location = New System.Drawing.Point(496, 57)
+        Me.ucrReceiverData.Location = New System.Drawing.Point(493, 56)
         Me.ucrReceiverData.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverData.Name = "ucrReceiverData"
         Me.ucrReceiverData.Selector = Nothing
@@ -378,11 +369,11 @@ Partial Class dlgExportClimaticDefinitions
         'ucrBase
         '
         Me.ucrBase.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrBase.Location = New System.Drawing.Point(8, 722)
+        Me.ucrBase.Location = New System.Drawing.Point(16, 754)
         Me.ucrBase.Margin = New System.Windows.Forms.Padding(6)
         Me.ucrBase.Name = "ucrBase"
         Me.ucrBase.Size = New System.Drawing.Size(615, 92)
-        Me.ucrBase.TabIndex = 24
+        Me.ucrBase.TabIndex = 28
         '
         'ucrInputStationID
         '
@@ -390,11 +381,11 @@ Partial Class dlgExportClimaticDefinitions
         Me.ucrInputStationID.AutoSize = True
         Me.ucrInputStationID.IsMultiline = False
         Me.ucrInputStationID.IsReadOnly = False
-        Me.ucrInputStationID.Location = New System.Drawing.Point(502, 623)
+        Me.ucrInputStationID.Location = New System.Drawing.Point(493, 605)
         Me.ucrInputStationID.Margin = New System.Windows.Forms.Padding(14)
         Me.ucrInputStationID.Name = "ucrInputStationID"
         Me.ucrInputStationID.Size = New System.Drawing.Size(177, 32)
-        Me.ucrInputStationID.TabIndex = 26
+        Me.ucrInputStationID.TabIndex = 20
         '
         'ucrInputCountry
         '
@@ -402,30 +393,30 @@ Partial Class dlgExportClimaticDefinitions
         Me.ucrInputCountry.AutoSize = True
         Me.ucrInputCountry.IsMultiline = False
         Me.ucrInputCountry.IsReadOnly = False
-        Me.ucrInputCountry.Location = New System.Drawing.Point(502, 678)
+        Me.ucrInputCountry.Location = New System.Drawing.Point(493, 719)
         Me.ucrInputCountry.Margin = New System.Windows.Forms.Padding(14)
         Me.ucrInputCountry.Name = "ucrInputCountry"
         Me.ucrInputCountry.Size = New System.Drawing.Size(177, 32)
-        Me.ucrInputCountry.TabIndex = 27
+        Me.ucrInputCountry.TabIndex = 24
         '
         'lblCountry
         '
         Me.lblCountry.AutoSize = True
-        Me.lblCountry.Location = New System.Drawing.Point(506, 655)
+        Me.lblCountry.Location = New System.Drawing.Point(493, 694)
         Me.lblCountry.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblCountry.Name = "lblCountry"
         Me.lblCountry.Size = New System.Drawing.Size(68, 20)
-        Me.lblCountry.TabIndex = 28
+        Me.lblCountry.TabIndex = 23
         Me.lblCountry.Text = "Country:"
         '
         'lblStationID
         '
         Me.lblStationID.AutoSize = True
-        Me.lblStationID.Location = New System.Drawing.Point(502, 598)
+        Me.lblStationID.Location = New System.Drawing.Point(493, 580)
         Me.lblStationID.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblStationID.Name = "lblStationID"
         Me.lblStationID.Size = New System.Drawing.Size(85, 20)
-        Me.lblStationID.TabIndex = 29
+        Me.lblStationID.TabIndex = 19
         Me.lblStationID.Text = "Station ID:"
         '
         'cmdDefine
@@ -435,17 +426,41 @@ Partial Class dlgExportClimaticDefinitions
         Me.cmdDefine.Margin = New System.Windows.Forms.Padding(4)
         Me.cmdDefine.Name = "cmdDefine"
         Me.cmdDefine.Size = New System.Drawing.Size(171, 38)
-        Me.cmdDefine.TabIndex = 30
+        Me.cmdDefine.TabIndex = 27
         Me.cmdDefine.Tag = "Options"
         Me.cmdDefine.Text = "Define"
         Me.cmdDefine.UseVisualStyleBackColor = True
+        '
+        'lblDefinitionID
+        '
+        Me.lblDefinitionID.AutoSize = True
+        Me.lblDefinitionID.Location = New System.Drawing.Point(493, 636)
+        Me.lblDefinitionID.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblDefinitionID.Name = "lblDefinitionID"
+        Me.lblDefinitionID.Size = New System.Drawing.Size(101, 20)
+        Me.lblDefinitionID.TabIndex = 21
+        Me.lblDefinitionID.Text = "Definition ID:"
+        '
+        'ucrInputDefinitionID
+        '
+        Me.ucrInputDefinitionID.AddQuotesIfUnrecognised = True
+        Me.ucrInputDefinitionID.AutoSize = True
+        Me.ucrInputDefinitionID.IsMultiline = False
+        Me.ucrInputDefinitionID.IsReadOnly = False
+        Me.ucrInputDefinitionID.Location = New System.Drawing.Point(493, 660)
+        Me.ucrInputDefinitionID.Margin = New System.Windows.Forms.Padding(14)
+        Me.ucrInputDefinitionID.Name = "ucrInputDefinitionID"
+        Me.ucrInputDefinitionID.Size = New System.Drawing.Size(177, 32)
+        Me.ucrInputDefinitionID.TabIndex = 22
         '
         'dlgExportClimaticDefinitions
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
-        Me.ClientSize = New System.Drawing.Size(682, 811)
+        Me.ClientSize = New System.Drawing.Size(693, 861)
+        Me.Controls.Add(Me.lblDefinitionID)
+        Me.Controls.Add(Me.ucrInputDefinitionID)
         Me.Controls.Add(Me.cmdDefine)
         Me.Controls.Add(Me.lblStationID)
         Me.Controls.Add(Me.lblCountry)
@@ -455,7 +470,6 @@ Partial Class dlgExportClimaticDefinitions
         Me.Controls.Add(Me.lblYear)
         Me.Controls.Add(Me.ucrReceiverMonth)
         Me.Controls.Add(Me.ucrReceiverYear)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.ucrChkIncludeSummaryData)
         Me.Controls.Add(Me.grpSummaries)
         Me.Controls.Add(Me.lblMaxTemp)
@@ -512,7 +526,6 @@ Partial Class dlgExportClimaticDefinitions
     Friend WithEvents ucrReceiverRain As ucrReceiverSingle
     Friend WithEvents ucrReceiverMinTemp As ucrReceiverSingle
     Friend WithEvents ucrReceiverMaxTemp As ucrReceiverSingle
-    Friend WithEvents Label1 As Label
     Friend WithEvents lblMonth As Label
     Friend WithEvents lblYear As Label
     Friend WithEvents ucrReceiverMonth As ucrReceiverSingle
@@ -522,4 +535,6 @@ Partial Class dlgExportClimaticDefinitions
     Friend WithEvents ucrInputCountry As ucrInputTextBox
     Friend WithEvents ucrInputStationID As ucrInputTextBox
     Friend WithEvents cmdDefine As Button
+    Friend WithEvents lblDefinitionID As Label
+    Friend WithEvents ucrInputDefinitionID As ucrInputTextBox
 End Class
