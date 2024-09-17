@@ -2869,6 +2869,24 @@ get_data_book_output_object_names <- function(output_object_list,
   
 }
 
+get_data_book_scalar_names <- function(scalar_list,
+                                       excluded_items = c(), 
+                                       as_list = FALSE, 
+                                       list_label = NULL){
+  out = names(scalar_list)
+  if(length(excluded_items) > 0) {
+    ex_ind = which(out %in% excluded_items)
+    if(length(ex_ind) != length(excluded_items)) warning("Some of the excluded_items were not found in the list of calculations")
+    if(length(ex_ind) > 0) out = out[-ex_ind]
+  }
+  if(!as_list) {
+    return(out)
+  }
+  lst = list()
+  lst[[list_label]] <- out
+  return(lst)
+}
+
 get_vignette <- function (package = NULL, lib.loc = NULL, all = TRUE) 
 {   
   oneLink <- function(s) {
@@ -2959,14 +2977,23 @@ cumulative_inventory <- function(data, station = NULL, from, to){
     return(data)
 }
 
-getRowHeadersWithText <- function(data, column, searchText, ignore_case, use_regex) {
-  if(use_regex){
+getRowHeadersWithText <- function(data, column, searchText, ignore_case, use_regex, match_entire_cell) {
+  if (use_regex) {
+    # Adjust the search text to match the entire cell if required
+    if (match_entire_cell) {
+      searchText <- paste0("^", searchText, "$")
+    }
     # Find the rows that match the search text using regex
     matchingRows <- stringr::str_detect(data[[column]], stringr::regex(searchText, ignore_case = ignore_case))
-  }else if (is.na(searchText)){
+  } else if (is.na(searchText)) {
     matchingRows <- apply(data[, column, drop = FALSE], 1, function(row) any(is.na(row)))
-  }else{
-    matchingRows <- grepl(searchText, data[[column]], ignore.case = ignore_case)
+  } else {
+    # Adjust the search text to match the entire cell if required
+    if (match_entire_cell) {
+      searchText <- paste0("^", searchText, "$")
+    }
+    # Find the rows that match the search text
+    matchingRows <- grepl(searchText, data[[column]], ignore.case = ignore_case, perl = TRUE)
   }
   # Get the row headers where the search text is found
   rowHeaders <- rownames(data)[matchingRows]
@@ -3331,4 +3358,18 @@ ggwalter_lieth <- function (data, month, station = NULL, p_mes, tm_max, tm_min, 
   }
   
   return(wandlplot)
+}
+
+# Function to check if a repo exists and is in R 
+check_github_repo <- function(owner, repo) {
+  tryCatch({
+    response <- gh::gh("/repos/:owner/:repo", owner = owner, repo = repo, verb = "GET", silent = TRUE)
+    if (response$language == "R") {
+      return(1)  # Repository exists and is in the R language
+    } else {
+      return(2)  # Repository exists, but isn't in the R language
+    }
+  }, error = function(e) {
+    return(3)  # Error occurred, repository doesn't exist
+  })
 }
