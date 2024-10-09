@@ -98,6 +98,7 @@ Public Class dlgSeasonalPlot
     End Sub
 
     Private Sub InitiliseDialog()
+        ucrBase.iHelpTopicID = 640
         ucrBase.clsRsyntax.iCallType = 3
         ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
 
@@ -182,7 +183,7 @@ Public Class dlgSeasonalPlot
         ucrSaveGraph.SetPrefix("seasonality_plot")
         ucrSaveGraph.SetIsComboBox()
         ucrSaveGraph.SetSaveTypeAsGraph()
-        ucrSaveGraph.SetCheckBoxText("Save Graph")
+        ucrSaveGraph.SetCheckBoxText("Store Graph")
         ucrSaveGraph.SetDataFrameSelector(ucrSelectorSeasonalityComparisons.ucrAvailableDataFrames)
         ucrSaveGraph.SetAssignToIfUncheckedValue("last_graph")
 

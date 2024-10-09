@@ -39,7 +39,7 @@ Public Class dlgCircularDensityPlot
     Private Sub InitialiseDialog()
         Dim dctKernel As New Dictionary(Of String, String)
         Dim dctUnits As New Dictionary(Of String, String)
-
+        ucrBase.iHelpTopicID = 181
         ucrBase.clsRsyntax.iCallType = 3
         ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
 
@@ -103,7 +103,7 @@ Public Class dlgCircularDensityPlot
         ucrSaveDensity.SetPrefix("circular_density")
         ucrSaveDensity.SetDataFrameSelector(ucrSelectorDataFrame.ucrAvailableDataFrames)
         ucrSaveDensity.SetIsComboBox()
-        ucrSaveDensity.SetCheckBoxText("Save Graph")
+        ucrSaveDensity.SetCheckBoxText("Store Graph")
         ucrSaveDensity.SetSaveTypeAsGraph()
         ucrSaveDensity.SetAssignToIfUncheckedValue("last_graph")
 

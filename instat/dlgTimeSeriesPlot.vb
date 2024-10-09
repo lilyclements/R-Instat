@@ -194,7 +194,7 @@ Public Class dlgTimeSeriesPlot
     End Sub
 
     Private Sub InitialiseDialog()
-        'ucrBase.iHelpTopicID =
+        ucrBase.iHelpTopicID = 639
         ucrBase.clsRsyntax.bExcludeAssignedFunctionOutput = False
         ucrBase.clsRsyntax.iCallType = 3
 
@@ -258,7 +258,7 @@ Public Class dlgTimeSeriesPlot
 
         ucrSavePlot.SetPrefix("line")
         ucrSavePlot.SetIsComboBox()
-        ucrSavePlot.SetCheckBoxText("Save Graph")
+        ucrSavePlot.SetCheckBoxText("Store Graph")
         ucrSavePlot.SetSaveTypeAsGraph()
         ucrSavePlot.SetDataFrameSelector(ucrSelectorTimeSeriesPlots.ucrAvailableDataFrames)
         ucrSavePlot.SetAssignToIfUncheckedValue("last_graph")
