@@ -73,6 +73,7 @@ Public Class dlgStartofRains
     Private strWetSpell As String = "wet_spell"
     Private strFactionEvap As String = "fraction_evap"
     Private strSumFractionEvap As String = "roll_sum_evap"
+    'Private strRollSumRainDryPeriod As String = "roll_sum_rain_dry_period"
 
     Private Sub dlgStartofRains_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If bFirstLoad Then
@@ -188,7 +189,7 @@ Public Class dlgStartofRains
         ucrNudEvapo.Increment = 0.01
         ucrNudEvapo.SetLinkedDisplayControl(lblFraction)
 
-        ucrChkAdditional.SetText("Additional")
+        ucrChkAdditional.SetText("Additional Conditions")
         ucrChkAdditional.AddParameterValuesCondition(True, "additional", "True")
         ucrChkAdditional.AddParameterValuesCondition(False, "additional", "False")
 
@@ -1009,11 +1010,12 @@ Public Class dlgStartofRains
 
     Private Sub ucrReceiverStation_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverStation.ControlValueChanged
         GroupByStationOptions()
+        YearStationVariable()
     End Sub
 
     Private Sub ucrReceiverYear_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverYear.ControlValueChanged
         GroupByYearOptions()
-        YearVariable()
+        YearStationVariable()
     End Sub
 
     Private Sub ucrSelectorForStartofRains_DataFrameChanged() Handles ucrSelectorForStartofRains.DataFrameChanged
@@ -1099,28 +1101,34 @@ Public Class dlgStartofRains
     Private Sub ChangeDSValue()
         If ucrChkAdditional.Checked Then
             If sdgAdditionalCondition.ucrChkNumberOfRainyDays.Checked Then
+                clsConditionsAndOperator.AddParameter("rain_days", clsROperatorParameter:=clsRollingSumRainDayOperator, iPosition:=2, bIncludeArgumentName:=False)
                 clsIsNaOperatorStartDOY.AddParameter("2", clsRFunctionParameter:=clsIsNaFirstRollSumRainDay, iPosition:=2)
                 clsConditionsOrOverallOperator.AddParameter("is.na_roll_sum_rain_day", clsRFunctionParameter:=clsIsNaRollSumRainDay, iPosition:=3)
                 clsCombinedList.AddParameter("rd_sub", clsRFunctionParameter:=clsCalcRainDayRollingSum, bIncludeArgumentName:=False, iPosition:=1)
             Else
                 clsCombinedList.RemoveParameterByName("rd_sub")
+                clsConditionsAndOperator.RemoveParameterByName("rain_days")
                 clsIsNaOperatorStartDOY.RemoveParameterByName("2")
                 clsConditionsOrOverallOperator.RemoveParameterByName("is.na_roll_sum_rain_day")
             End If
             If sdgAdditionalCondition.ucrChkDrySpell.Checked Then
+                clsConditionsAndOperator.AddParameter("dry_spell", clsROperatorParameter:=clsDSCombineOperator, iPosition:=3, bIncludeArgumentName:=False)
                 clsIsNaOperatorStartDOY.AddParameter("3", clsRFunctionParameter:=clsIsNaFirstDrySpell, iPosition:=3)
                 clsConditionsOrOverallOperator.AddParameter("is.na_dry_spell", clsRFunctionParameter:=clsIsNaDrySpell, iPosition:=4)
                 clsCombinedList.AddParameter("ds_sub", clsRFunctionParameter:=clsCalcDrySpellRollMax, iPosition:=2, bIncludeArgumentName:=False)
             Else
+                clsConditionsAndOperator.RemoveParameterByName("dry_spell")
                 clsCombinedList.RemoveParameterByName("ds_sub")
                 clsIsNaOperatorStartDOY.RemoveParameterByName("3")
                 clsConditionsOrOverallOperator.RemoveParameterByName("is.na_dry_spell")
             End If
             If sdgAdditionalCondition.ucrChkDryPeriod.Checked Then
+                clsConditionsAndOperator.AddParameter("dry_period", clsROperatorParameter:=clsDPCombineOperator, iPosition:=4, bIncludeArgumentName:=False)
                 clsIsNaOperatorStartDOY.AddParameter("4", clsRFunctionParameter:=clsIsNaFirstDryPeriod, iPosition:=4)
                 clsConditionsOrOverallOperator.AddParameter("is.na_dry_period", clsRFunctionParameter:=clsIsNaDryPeriod, iPosition:=5)
                 clsCombinedList.AddParameter("dp_sub", clsRFunctionParameter:=clsCalcRollSumNumberDryPeriod, iPosition:=3, bIncludeArgumentName:=False)
             Else
+                clsConditionsAndOperator.RemoveParameterByName("dry_period")
                 clsCombinedList.RemoveParameterByName("dp_sub")
                 clsIsNaOperatorStartDOY.RemoveParameterByName("4")
                 clsConditionsOrOverallOperator.RemoveParameterByName("is.na_dry_period")
@@ -1174,20 +1182,29 @@ Public Class dlgStartofRains
             clsIsNaOperatorStartDOY.RemoveParameterByName("2")
             clsConditionsOrOverallOperator.RemoveParameterByName("is.na_roll_sum_rain_day")
 
+            clsConditionsAndOperator.RemoveParameterByName("dry_period")
+            clsConditionsAndOperator.RemoveParameterByName("dry_spell")
+            clsConditionsAndOperator.RemoveParameterByName("rain_days")
+
             clsRainDayRollingSumFunction.RemoveParameterByName("n")
             clsDrySpellPeriodRollMaxFunction.RemoveParameterByName("n")
             clsSumRainDryPeriodOperator.RemoveParameterByName("right")
-            clsRollingSumRainDayOperator.RemoveParameterByName("1")
             clsDSCombineOperator.RemoveParameterByName("ds_max")
+            clsRollingSumRainDayOperator.RemoveParameterByName("1")
             clsSumRainDryPeriodIntervalPlusOperator.RemoveParameterByName("n")
             clsRollingSumRainDryPeriodFunction.RemoveParameterByName("n")
             clsSumRainDryPeriodIntervalMinusOperator.RemoveParameterByName("0")
         End If
     End Sub
 
-    Private Sub YearVariable()
+    Private Sub YearStationVariable()
         If Not ucrReceiverYear.IsEmpty Then
             clsVectorFunction.AddParameter("x", ucrReceiverYear.GetVariableNames(), iPosition:=0, bIncludeArgumentName:=False)
+            If Not ucrReceiverStation.IsEmpty Then
+                clsVectorFunction.AddParameter("y", ucrReceiverStation.GetVariableNames(), iPosition:=1, bIncludeArgumentName:=False)
+            Else
+                clsVectorFunction.RemoveParameterByName("y")
+            End If
             clsGetlinkeddataFunction.AddParameter("link_cols", clsRFunctionParameter:=clsVectorFunction, iPosition:=1)
         Else
             clsGetlinkeddataFunction.RemoveParameterByName("link_cols")
