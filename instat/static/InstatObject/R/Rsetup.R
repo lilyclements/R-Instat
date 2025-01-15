@@ -204,7 +204,7 @@ load_R_Instat_packages <- function() {
   # tidyr loaded because unite() function is required by mmtable() function from mmtable2 package
   # purrr loaded because map_int() is required  by function(s) such as header_top_left() from mmtable2 package
   # mc2d loaded because of triangular and continuous empirical distributions
-  packs_to_load <- c("purrr", "plyr", "tidyr", "dplyr", "ggplot2", "ggthemes", "svglite", "ggfortify", "PCICt", "sp", "ggmosaic", "wakefield", "circular", "latticeExtra", "texmex", "mc2d")
+  packs_to_load <- c("purrr", "plyr", "tidyr", "dplyr", "instatCalculations", "ggplot2", "ggthemes", "svglite", "ggfortify", "PCICt", "sp", "ggmosaic", "wakefield", "circular", "latticeExtra", "texmex", "mc2d")
   for(pack in packs_to_load) {
     try(library(pack, character.only = TRUE))
   }
