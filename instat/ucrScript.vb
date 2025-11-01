@@ -20,6 +20,7 @@ Imports System.Windows.Controls
 Imports RInsightF461
 Imports ScintillaNET
 Imports RDotNet
+Imports instat.Translations
 
 Public Class ucrScript
 
@@ -181,7 +182,7 @@ Public Class ucrScript
     ''' </summary>
     Public Sub CutText()
         If TabControl.SelectedIndex = iTabIndexLog Then
-            MsgBox("You can only cut from a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Cut from log tab")
+            MsgBoxTranslate("You can only cut from a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Cut from log tab")
             Exit Sub
         End If
 
@@ -216,7 +217,7 @@ Public Class ucrScript
             clsRScriptToClean = New RScript(strScript)
             dctRStatements = clsRScriptToClean.statements
         Catch ex As Exception
-            MsgBox("Could not parse R script for Quarto cleaning. " &
+            MsgBoxTranslate("Could not parse R script for Quarto cleaning. " &
                    "Parsing failed with message:" & Environment.NewLine & Environment.NewLine &
                    ex.Message,
                    MsgBoxStyle.Information, "Could Not parse R script")
@@ -252,12 +253,12 @@ Public Class ucrScript
     ''' <returns></returns>
     Public Function IsOkToLoadScript() As Boolean
         If TabControl.SelectedIndex = iTabIndexLog Then
-            MsgBox("You can only load script to a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Load to log tab")
+            MsgBoxTranslate("You can only load script to a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Load to log tab")
             Return False
         End If
 
         If clsScriptActive.TextLength > 0 _
-                AndAlso MsgBox("Loading a script from file will clear your current script" _
+                AndAlso MsgBoxTranslate("Loading a script from file will clear your current script" _
                                & Environment.NewLine & "Do you still want to load?",
                                vbYesNo, "Load From File") = vbNo Then
             Return False
@@ -280,13 +281,13 @@ Public Class ucrScript
             If TabControl.TabCount = 2 Then
                 TabControl.SelectTab(1)
             Else
-                MsgBox("No script tab selected. Please first select the tab of an R or Quarto script you wish to write to.", vbExclamation, "Script Tab Not Selected")
+                MsgBoxTranslate("No script tab selected. Please first select the tab of an R or Quarto script you wish to write to.", vbExclamation, "Script Tab Not Selected")
                 Return False
             End If
         End If
 
         If Not (enumScriptType = ScriptType.rScript OrElse enumScriptType = ScriptType.quarto) Then
-            MsgBox("Can only write to R or Quarto scripts. Please first select the tab of an R or Quarto script you wish to write to.", vbExclamation, "Script Tab Not Selected")
+            MsgBoxTranslate("Can only write to R or Quarto scripts. Please first select the tab of an R or Quarto script you wish to write to.", vbExclamation, "Script Tab Not Selected")
             Return False
         End If
         Return True
@@ -329,7 +330,7 @@ Public Class ucrScript
                                              Path.GetFileName(fileName))
             EnableDisableButtons()
         Catch
-            MsgBox("Could not load the script from file." & Environment.NewLine &
+            MsgBoxTranslate("Could not load the script from file." & Environment.NewLine &
                    "The file may be in use by another program or you may not have access to read from the specified location.",
                    vbExclamation, "Load Script")
         End Try
@@ -354,7 +355,7 @@ Public Class ucrScript
     ''' </summary>
     Public Sub PasteText()
         If TabControl.SelectedIndex = iTabIndexLog Then
-            MsgBox("You can only paste to a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Paste to log tab")
+            MsgBoxTranslate("You can only paste to a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Paste to log tab")
             Exit Sub
         End If
 
@@ -362,7 +363,7 @@ Public Class ucrScript
             clsScriptActive.Paste()
             EnableDisableButtons()
         Else
-            MsgBox("You can only paste text data on the script window.", MsgBoxStyle.Exclamation, "Paste to Script Window")
+            MsgBoxTranslate("You can only paste text data on the script window.", MsgBoxStyle.Exclamation, "Paste to Script Window")
         End If
     End Sub
 
@@ -376,7 +377,7 @@ Public Class ucrScript
             If TabControl.TabCount = 2 Then
                 TabControl.SelectTab(1)
             Else
-                MsgBox("No script tab selected. Please first select the tab of the script you wish to save.", vbExclamation, "Save Script")
+                MsgBoxTranslate("No script tab selected. Please first select the tab of the script you wish to save.", vbExclamation, "Save Script")
                 Exit Sub
             End If
         End If
@@ -422,7 +423,7 @@ Public Class ucrScript
                         strInitialDirectory = Path.GetDirectoryName(dlgSave.FileName)
                     End If
                 Catch
-                    MsgBox("Could not save the " & If(bIsLog, "Log ", "") & "file." & Environment.NewLine &
+                    MsgBoxTranslate("Could not save the " & If(bIsLog, "Log ", "") & "file." & Environment.NewLine &
                    "The file may be in use by another program or you may not have access to write to the specified location.",
                    vbExclamation, "Save " & If(bIsLog, "Log ", "") & "File.")
                 End Try
@@ -440,7 +441,7 @@ Public Class ucrScript
 
     Private Sub AddTab(Optional enumScriptTypeNew As ScriptType = ScriptType.rScript, Optional bIsLogTab As Boolean = False)
         If enumScriptTypeNew <> ScriptType.rScript AndAlso enumScriptTypeNew <> ScriptType.quarto Then
-            MsgBox("Developer error: The new tab cannot be " & enumScriptType.ToString() & ", it must be R script or Quarto.", MsgBoxStyle.Critical, "New Tab")
+            MsgBoxTranslate("Developer error: The new tab cannot be " & enumScriptType.ToString() & ", it must be R script or Quarto.", MsgBoxStyle.Critical, "New Tab")
             Exit Sub
         End If
 
@@ -839,7 +840,7 @@ Public Class ucrScript
                 End If
                 dctRStatements = clsRScript.statements
             Catch ex As Exception
-                MsgBox("R script parsing failed with message:" & Environment.NewLine _
+                MsgBoxTranslate("R script parsing failed with message:" & Environment.NewLine _
                    & Environment.NewLine & ex.Message & Environment.NewLine & Environment.NewLine _
                    & "Try using 'Run All' or 'Run Selected'. This will execute the script using a less strict method.",
                    MsgBoxStyle.Information, "Could Not Parse R script")
@@ -898,7 +899,7 @@ Public Class ucrScript
         Try
             strQuartoRenderScript = File.ReadAllText(strQuartoRenderScriptPath)
         Catch ex As Exception
-            MsgBox("Could not read the quarto render script from:" & Environment.NewLine _
+            MsgBoxTranslate("Could not read the quarto render script from:" & Environment.NewLine _
                    & strQuartoRenderScriptPath & Environment.NewLine & Environment.NewLine _
                    & "Error message was:" & Environment.NewLine & ex.Message, MsgBoxStyle.Critical, "Could Not Read Quarto Render Script")
             Return ""
@@ -919,7 +920,7 @@ Public Class ucrScript
         Try
             strQuartoTemplate = File.ReadAllText(strQuartoTemplatePath)
         Catch ex As Exception
-            MsgBox("Could not read the quarto template from:" & Environment.NewLine _
+            MsgBoxTranslate("Could not read the quarto template from:" & Environment.NewLine _
                    & strQuartoTemplatePath & Environment.NewLine & Environment.NewLine _
                    & "Error message was:" & Environment.NewLine & ex.Message, MsgBoxStyle.Critical, "Could Not Read Quarto Template")
             Return ""
@@ -947,7 +948,7 @@ Public Class ucrScript
             dctRStatements = New RScript(frmMain.clsRLink.GetFormattedComment(strComment) _
                                             & Environment.NewLine & strScript).statements
         Catch ex As Exception
-            MsgBox("R script parsing failed with message:" & Environment.NewLine _
+            MsgBoxTranslate("R script parsing failed with message:" & Environment.NewLine _
                    & Environment.NewLine & ex.Message & Environment.NewLine & Environment.NewLine _
                    & "R-Instat will now attempt to execute the script using a less strict method.",
                    MsgBoxStyle.Information, "Could Not Parse R Script")
@@ -1136,7 +1137,7 @@ Public Class ucrScript
         End If
 
         If clsScriptActive.TextLength > 0 AndAlso bIsTextChanged _
-            AndAlso MsgBox("Are you sure you want to delete the tab and lose the contents?",
+            AndAlso MsgBoxTranslate("Are you sure you want to delete the tab and lose the contents?",
                                vbYesNo, "Remove Tab") = vbNo Then
             Exit Sub
         End If
@@ -1214,12 +1215,12 @@ Public Class ucrScript
     Private Sub mnuClearContents_Click(sender As Object, e As EventArgs) Handles mnuClear.Click, cmdClear.Click
 
         If TabControl.SelectedIndex = iTabIndexLog Then
-            MsgBox("You can only clear a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Clear log tab")
+            MsgBoxTranslate("You can only clear a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Clear log tab")
             Exit Sub
         End If
 
         If clsScriptActive.TextLength < 1 _
-                OrElse MsgBox("Are you sure you want to clear the contents of the script window?",
+                OrElse MsgBoxTranslate("Are you sure you want to clear the contents of the script window?",
                                vbYesNo, "Clear") = vbNo Then
             Exit Sub
         End If
@@ -1255,7 +1256,7 @@ Public Class ucrScript
         Dim strSelectedTextOrigional As String = clsScriptActive.SelectedText
         clsScriptActive.ReplaceSelection(Clipboard.GetText())
         If Not FindAndHighlightNextOccurrence(strSelectedTextOrigional) Then
-            MsgBox("No more occurrences found.", MsgBoxStyle.Information, "Replace")
+            MsgBoxTranslate("No more occurrences found.", MsgBoxStyle.Information, "Replace")
         End If
     End Sub
 
@@ -1293,7 +1294,7 @@ Public Class ucrScript
             Process.Start(Path.Combine(strRInstatLogFilesFolderPath, strScriptFilename))
             TabControl.SelectedTab.Text = Path.GetFileNameWithoutExtension(strScriptFilename)
         Catch
-            MsgBox("Could not save the script file." & Environment.NewLine &
+            MsgBoxTranslate("Could not save the script file." & Environment.NewLine &
                    "The file may be in use by another program or you may not have access to write to the specified location.",
                    vbExclamation, "Open Script as File")
         End Try
@@ -1301,7 +1302,7 @@ Public Class ucrScript
 
     Private Sub mnuRedo_Click(sender As Object, e As EventArgs) Handles mnuRedo.Click
         If TabControl.SelectedIndex = iTabIndexLog Then
-            MsgBox("You can only redo in a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Redo log tab")
+            MsgBoxTranslate("You can only redo in a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Redo log tab")
             Exit Sub
         End If
 
@@ -1326,7 +1327,7 @@ Public Class ucrScript
                                        "Are you sure you want to run all the R script in the window?",
                                        "Are you sure you want to render all the Quarto script in the window?")
         If clsScriptActive.TextLength < 1 _
-                OrElse MsgBox(strMsg, vbYesNo, "Run All") = vbNo Then
+                OrElse MsgBoxTranslate(strMsg, vbYesNo, "Run All") = vbNo Then
             Exit Sub
         End If
 
@@ -1340,7 +1341,7 @@ Public Class ucrScript
                 strScriptToRun = GetQuartoRenderScript(clsScriptActive.Text)
                 strComment = "Code to render the Quarto script in the Script Window (all text)"
             Case Else
-                MsgBox("Developer error: cannot run script of type " & enumScriptType.ToString(), MsgBoxStyle.Critical, "Run All")
+                MsgBoxTranslate("Developer error: cannot run script of type " & enumScriptType.ToString(), MsgBoxStyle.Critical, "Run All")
                 Exit Sub
         End Select
 
@@ -1382,7 +1383,7 @@ Public Class ucrScript
 
     Private Sub mnuUndo_Click(sender As Object, e As EventArgs) Handles mnuUndo.Click
         If TabControl.SelectedIndex = iTabIndexLog Then
-            MsgBox("You can only undo from a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Undo log tab")
+            MsgBoxTranslate("You can only undo from a script tab, not the log tab.", MsgBoxStyle.Exclamation, "Undo log tab")
             Exit Sub
         End If
 
@@ -1437,7 +1438,7 @@ Public Class ucrScript
         Next
 
         If IsNothing(clsScriptActive) Then
-            MsgBox("Developer error: could not find editor window in tab.")
+            MsgBoxTranslate("Developer error: could not find editor window in tab.")
         End If
     End Sub
 
@@ -1480,13 +1481,13 @@ Public Class ucrScript
     Private Sub ReplaceAll(strFindText As String, strReplacementText As String)
 
         If String.IsNullOrEmpty(strFindText) Then
-            MsgBox("The text to find cannot be empty.", MsgBoxStyle.Exclamation, "Replace All")
+            MsgBoxTranslate("The text to find cannot be empty.", MsgBoxStyle.Exclamation, "Replace All")
             Exit Sub
         End If
 
         Dim iCount As Integer = NumOfOccurences(strFindText)
         If iCount = 0 Then
-            MsgBox("The text to find was not found in the document.", MsgBoxStyle.Information, "Replace All")
+            MsgBoxTranslate("The text to find was not found in the document.", MsgBoxStyle.Information, "Replace All")
             Exit Sub
         End If
 
