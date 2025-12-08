@@ -145,7 +145,7 @@ Public Class dlgClimaticBoxPlot
         ucrReceiverLabelOutliers.SetParameterIsString()
         ucrReceiverLabelOutliers.Selector = ucrSelectorClimaticBoxPlot
         ucrReceiverLabelOutliers.bWithQuotes = False
-
+        ucrReceiverLabelOutliers.SetLinkedDisplayControl(lblVariable)
 
         ' others
         ucrReceiverDate.SetParameter(New RParameter("date", 1))
@@ -182,7 +182,7 @@ Public Class dlgClimaticBoxPlot
         ucrChkVarWidth.SetValuesCheckedAndUnchecked("TRUE", "FALSE")
         ucrChkVarWidth.SetRDefault("FALSE")
 
-        ucrChkLabel.SetText("Label Outliers")
+        ucrChkLabel.SetText("Label Outliers:")
         ucrChkLabel.AddParameterPresentCondition(True, "stat_sumary", True)
         ucrChkLabel.AddParameterPresentCondition(False, "stat_sumary", False)
         ucrChkLabel.AddToLinkedControls(ucrReceiverLabelOutliers, {True}, bNewLinkedAddRemoveParameter:=True, bNewLinkedHideIfParameterMissing:=True)
@@ -197,7 +197,7 @@ Public Class dlgClimaticBoxPlot
         ucrNudOutlierCoefficient.SetParameter(New RParameter("coef", iNewPosition:=1))
         ucrNudOutlierCoefficient.DecimalPlaces = 1
         ucrNudOutlierCoefficient.Increment = 0.1
-        ucrNudOutlierCoefficient.SetRDefault(1.5)
+        ucrNudOutlierCoefficient.SetRDefault(3)
 
         ucrNudOutlierCoefficient.SetLinkedDisplayControl(lblOutlierCoefficient)
 
