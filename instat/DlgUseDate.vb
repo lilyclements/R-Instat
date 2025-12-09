@@ -91,7 +91,7 @@ Public Class dlgUseDate
         ucrChkWeekNum.SetText("")
         ucrChkWeekNum.SetRDefault("FALSE")
 
-        ucrChkWeekAbbr.SetParameter(New RParameter("week_abbr", 8))
+        ucrChkWeekAbbr.SetParameter(New RParameter("week_abbr", 10))
         ucrChkWeekAbbr.SetText("")
         ucrChkWeekAbbr.SetRDefault("FALSE")
         ucrChkWeekAbbr.Enabled = False 'TODO. Temporary
@@ -249,4 +249,5 @@ Public Class dlgUseDate
     Private Sub ucrInputComboBoxStartingMonth_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrInputComboBoxStartingMonth.ControlValueChanged
         Shifted()
     End Sub
+
 End Class
