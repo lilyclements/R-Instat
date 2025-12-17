@@ -1233,8 +1233,6 @@ Public Class dlgStartofRains
     End Sub
 
     Private Sub ucrChkAsDate_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkAsDate.ControlValueChanged
-        'AddTypes()
-        'AddStartRainsDefinitionParams()
         If ucrChkAsDate.Checked Then
             clsCombinationSubCalcList.AddParameter("sub2", clsRFunctionParameter:=clsCalcStartDate, bIncludeArgumentName:=False, iPosition:=1)
             clsListSubCalc.AddParameter("sub2", clsRFunctionParameter:=clsCalcStartDate, bIncludeArgumentName:=False, iPosition:=1)
@@ -1245,8 +1243,6 @@ Public Class dlgStartofRains
     End Sub
 
     Private Sub ucrChkAsDoy_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkAsDoy.ControlValueChanged
-        'AddTypes()
-        'AddStartRainsDefinitionParams()
         AddRemoveSetNamesParameter()
         If ucrChkAsDoy.Checked Then
             clsCombinationSubCalcList.AddParameter("sub1", clsRFunctionParameter:=clsCalcStartDOY, bIncludeArgumentName:=False, iPosition:=0)
@@ -1283,21 +1279,12 @@ Public Class dlgStartofRains
     Private Sub ucrInputNewDoyColumnName_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrInputNewDoyColumnName.ControlValueChanged
         clsSORStartSummary.clsSORFilterOperator.AddParameter("left", strParameterValue:=ucrInputNewDoyColumnName.GetText, bIncludeArgumentName:=False, iPosition:=0)
         clsSORStatusSummary.clsSORFilterOperator.AddParameter("left", strParameterValue:=ucrInputNewDoyColumnName.GetText, bIncludeArgumentName:=False, iPosition:=0)
-        'AddTypes()
-        'AddStartRainsDefinitionParams()
         AddRemoveSetNamesParameter()
     End Sub
 
     Private Sub ucrInputNewStatusColumnName_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrInputNewStatusColumnName.ControlValueChanged
-        'AddTypes()
-        'AddStartRainsDefinitionParams()
         AddRemoveSetNamesParameter()
     End Sub
-
-    'Private Sub ucrInputNewDateColumnName_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrInputNewDateColumnName.ControlValueChanged
-    '    AddTypes()
-    '    AddStartRainsDefinitionParams()
-    'End Sub
 
     Private Sub AddRemoveStartStatus()
         If ucrChkStatus.Checked Then
@@ -1306,21 +1293,27 @@ Public Class dlgStartofRains
             ucrBase.clsRsyntax.AddToAfterCodes(clsStatRainStatus2Function, iPosition:=2)
             ucrBase.clsRsyntax.AddToAfterCodes(clsStartRainCombine2Function, iPosition:=3)
             ucrBase.clsRsyntax.AddToAfterCodes(clsRunStartStatus2Function, iPosition:=4)
-            ucrBase.clsRsyntax.AddToAfterCodes(clsDefineAsClimatic, iPosition:=5)
         Else
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsGetlinkeddataFunction)
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsDefineAsClimatic)
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsCalculatedListformFunction)
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsStatRainStatus2Function)
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsStartRainCombine2Function)
+        End If
+        AddRemoveDefineAsClimaticFunction()
+    End Sub
+
+
+    Private Sub AddRemoveDefineAsClimaticFunction()
+        If ucrChkAsDate.Checked OrElse ucrChkStatus.Checked OrElse ucrChkAsDoy.Checked Then
+            ucrBase.clsRsyntax.AddToAfterCodes(clsDefineAsClimatic, iPosition:=5)
+        Else
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsRunStartStatus2Function)
         End If
     End Sub
 
     Private Sub ucrChkStatus_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkStatus.ControlValueChanged
         AddRemoveStartStatus()
-        'AddTypes()
-        'AddStartRainsDefinitionParams()
         AddRemoveSetNamesParameter()
         If ucrChkStatus.Checked Then
             clsCombinationSubCalcList.AddParameter("sub3", clsRFunctionParameter:=clsCalcStatus, bIncludeArgumentName:=False, iPosition:=2)
