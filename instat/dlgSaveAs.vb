@@ -31,6 +31,10 @@ Public Class dlgSaveAs
         SetRCodeForControls(bReset)
         bReset = False
         autoTranslate(Me)
+
+        ' Auto-trigger browse on load
+        Me.BeginInvoke(New MethodInvoker(AddressOf ucrFilePath.TriggerBrowse))
+
     End Sub
 
     Private Sub InitialiseDialog()
