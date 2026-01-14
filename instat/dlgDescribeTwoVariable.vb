@@ -32,8 +32,8 @@ Public Class dlgDescribeTwoVariable
     'SUMMARY FUNCTIoNS
     Private clsCombineFrequencyParametersFunction, clsCombineFrequencyColParametersFunction, clsCombineFunction, clsCombineSwapAnova2Table, clsCombineAnova2Function, clsSummariseFunction,
        clsDummyFunction, clsGroupByFunction, clsRAnovaFunction, clsCorrFunction, clsRAnovaTableFunction,
-        clsRCorrelationFunction, clsSkimrFunction, clsSummariesListFunction, clsCombineAnovaFunction,
-        clsSummaryTableCombineFactorsFunction, clsSummaryTableFunction, clsRAnovaSwapTable2Funtion,
+        clsRCorrelationFunction, clsSkimrFunction, clsSummariesListFunction, clsCombineAnovaFunction, clsMutateFunction, clsAcrossFunction,
+        clsSummaryTableCombineFactorsFunction, clsSummaryTableFunction, clsRAnovaSwapTable2Funtion, clsEverythingFunction, clsReplaceNaFunction,
         clsThreeVariableCombineFrequencyParametersFunction, clsPivotWiderFunction, clsMappingFunction, clsMapping2Function, clsRAnovaTable2Function As New RFunction
 
     'FORMAT TABLE FUNCTIONS
@@ -41,7 +41,7 @@ Public Class dlgDescribeTwoVariable
 
     Private clsGroupByPipeOperator, clsSummaryOperator, clsGroupByPipeOperator2, clsGroupByPipeOperator3, clsGroupByPipeOperator4, clsGroupByPipeOperatorData As New ROperator
 
-    Private clsTildOperator, clsMapOperator, clsGtTableROperator, clsPivotOperator As New ROperator
+    Private clsTildOperator, clsMapOperator, clsMutateOperator, clsGtTableROperator, clsPivotOperator As New ROperator
 
     Private clsgtFunction, clsMapSummaryFunction, clsMap2SummaryFunction, clsMapGtFunction As New RFunction
     'Frequency Parameters
@@ -223,6 +223,10 @@ Public Class dlgDescribeTwoVariable
         clsPipeOperator = New ROperator
         clsTabFootnoteOperator = New ROperator
         clsgtFunction = New RFunction
+        clsMutateFunction = New RFunction
+        clsEverythingFunction = New RFunction
+        clsReplaceNaFunction = New RFunction
+        clsAcrossFunction = New RFunction
         clsSummaryOperator = New ROperator
         clsMapOperator = New ROperator
         clsPivotWiderFunction = New RFunction
@@ -245,6 +249,7 @@ Public Class dlgDescribeTwoVariable
         clsAnovaSwapTable2Opeator = New ROperator
         clsYlistOperator = New ROperator
         clsYlist2Operator = New ROperator
+        clsMutateOperator = New ROperator
         clsRAnovaTable2Function = New RFunction
         clsRAnovaSwapTable2Funtion = New RFunction
         clsCrossDfFunction = New RFunction
@@ -423,9 +428,32 @@ Public Class dlgDescribeTwoVariable
 
         clsgtFunction.SetPackageName("instatExtras")
         clsgtFunction.SetRCommand("generate_summary_tables")
+        clsgtFunction.AddParameter("rm_summary_title", "TRUE", iPosition:=0)
+
+        clsEverythingFunction.SetPackageName("dplyr")
+        clsEverythingFunction.SetRCommand("everything")
+
+        clsReplaceNaFunction.SetPackageName("~ tidyr")
+        clsReplaceNaFunction.SetRCommand("replace_na")
+        clsReplaceNaFunction.AddParameter("var", ".x", bIncludeArgumentName:=False, iPosition:=0)
+        clsReplaceNaFunction.AddParameter("x", "0", bIncludeArgumentName:=False, iPosition:=1)
+
+        clsAcrossFunction.SetPackageName("dplyr")
+        clsAcrossFunction.SetRCommand("across")
+        clsAcrossFunction.AddParameter("everything", clsRFunctionParameter:=clsEverythingFunction, bIncludeArgumentName:=False, iPosition:=0)
+        clsAcrossFunction.AddParameter("replace", clsRFunctionParameter:=clsReplaceNaFunction, bIncludeArgumentName:=False, iPosition:=1)
+
+        clsMutateFunction.SetPackageName("dplyr")
+        clsMutateFunction.SetRCommand("mutate")
+        clsMutateFunction.AddParameter("across", clsRFunctionParameter:=clsAcrossFunction, bIncludeArgumentName:=False, iPosition:=0)
 
         clsGtTableROperator.SetOperation("%>%")
         clsGtTableROperator.bBrackets = False
+
+        clsMutateOperator.SetOperation("%>%")
+        clsMutateOperator.bBrackets = False
+        clsMutateOperator.AddParameter("left", clsRFunctionParameter:=clsMutateFunction, iPosition:=0)
+        clsMutateOperator.AddParameter("right", clsROperatorParameter:=clsGtTableROperator, iPosition:=1)
 
         clsSummaryOperator.SetOperation("%>%")
         clsSummaryOperator.AddParameter("data", clsRFunctionParameter:=ucrSelectorDescribeTwoVar.ucrAvailableDataFrames.clsCurrDataFrame, iPosition:=0)
@@ -435,7 +463,7 @@ Public Class dlgDescribeTwoVariable
 
         clsPivotOperator.SetOperation("%>%")
         clsPivotOperator.AddParameter("left", clsRFunctionParameter:=clsPivotWiderFunction)
-        clsPivotOperator.AddParameter("right", clsROperatorParameter:=clsGtTableROperator)
+        clsPivotOperator.AddParameter("right", clsROperatorParameter:=clsMutateOperator)
         clsPivotOperator.bBrackets = False
 
         clsMapOperator.SetOperation("%>%")
@@ -597,9 +625,10 @@ Public Class dlgDescribeTwoVariable
         ucrChkDisplayMargins.Visible = (rdoTwoVariable.Checked AndAlso (IsFactorByFactor() OrElse IsFactorByNumeric())) OrElse
     (rdoThreeVariable.Checked AndAlso (IsFactorByFactorByNumeric() OrElse IsFactorByNumericByFactor() OrElse IsFactorByFactorByFactor()))
 
-        ucrInputMarginName.Visible = ucrChkDisplayMargins.Checked AndAlso
-    (IsFactorByFactor() OrElse IsFactorByFactorByNumeric() OrElse
-    IsFactorByNumericByFactor() OrElse IsFactorByFactorByFactor())
+        ucrInputMarginName.Visible =
+    ucrChkDisplayMargins.Visible AndAlso
+    ucrChkDisplayMargins.Checked
+
 
         grpDisplay.Visible = rdoTwoVariable.Checked AndAlso IsFactorByFactor()
         ucrReceiverPercentages.Visible = rdoTwoVariable.Checked AndAlso ucrChkDisplayAsPercentage.Checked AndAlso rdoORow.Checked AndAlso IsFactorByFactor()
@@ -609,6 +638,7 @@ Public Class dlgDescribeTwoVariable
         ucrChkSwapXYVar.Visible = False
         ucrChkOmitMissing.Visible = False
 
+
         If rdoTwoVariable.Checked Then
             ucrChkOmitMissing.Visible = False
             ucrChkOmitMissing.Visible = Not ucrChkSwapXYVar.Checked AndAlso IsFactorByNumeric()
@@ -617,6 +647,8 @@ Public Class dlgDescribeTwoVariable
             cmdMissingOptions.Visible = ucrChkOmitMissing.Checked
         End If
         If rdoThreeVariable.Checked Then
+            ucrChkSwapXYVar.Visible = IsNumericByNumericByFactor()
+
             If IsFactorByFactorByNumeric() OrElse IsFactorByNumericByFactor() Then
                 ucrReorderSummary.Visible = True
                 cmdSummaries.Visible = True
@@ -627,6 +659,11 @@ Public Class dlgDescribeTwoVariable
             ucrChkOmitMissing.Visible = IsFactorByNumericByFactor() OrElse IsFactorByFactorByNumeric()
             cmdMissingOptions.Visible = ucrChkOmitMissing.Checked AndAlso (IsFactorByNumericByFactor() OrElse IsFactorByFactorByNumeric())
         End If
+
+        If Not ucrChkSwapXYVar.Visible Then
+            ucrChkSwapXYVar.Checked = False
+        End If
+
     End Sub
 
     Private Sub ChangeBaseRCode()
