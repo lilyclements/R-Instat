@@ -283,7 +283,7 @@ Public Class dlgClimaticSummary
         clsDefineAsClimatic.AddParameter("data_name", strLinkeddata, iPosition:=0)
         clsDefineAsClimatic.AddParameter("key_col_names", clsRFunctionParameter:=clsLinkColsFunction, iPosition:=1)
         clsDefineAsClimatic.AddParameter("types", clsRFunctionParameter:=clsKeyColsVector, iPosition:=2)
-        clsDefineAsClimatic.AddParameter("overwrite", "TRUE", iPosition:=3)
+        clsDefineAsClimatic.AddParameter("overwrite", "FALSE", iPosition:=3)
 
         clsAddDateFunction.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$calculate_summary")
         clsAddDateFunction.AddParameter("factors", clsRFunctionParameter:=clsDefaultFactors, iPosition:=3)
@@ -553,12 +553,12 @@ Public Class dlgClimaticSummary
             clsGetLinkedDataFrameFunction.AddParameter("from_data_frame", Chr(34) & strDataFrame & Chr(34), iPosition:=0)
             clsGetLinkedDataFrameFunction.AddParameter("link_cols", clsRFunctionParameter:=clsLinkColsFunction, iPosition:=1)
 
-            ' FIX: Pass the variable name as an unquoted value, not a string literal.
             clsGetDataFrameFunction.AddParameter(strParameterValue:=strLinkeddata, iPosition:=0)
 
-            clsGetVariablesMetadataFunction.AddParameter("data_name", strLinkeddata, iPosition:=0)
-            clsGetDailyDataCalculationFunction.AddParameter("data_name", strLinkeddata, iPosition:=0)
-            clsGetSummaryVariablesFunction.AddParameter("data_name", strLinkeddata, iPosition:=0)
+            ' The following functions should use the main data frame from the selector, not the linked_data_name
+            clsGetVariablesMetadataFunction.AddParameter(strParameterValue:=Chr(34) & strDataFrame & Chr(34), iPosition:=0)
+            clsGetDailyDataCalculationFunction.AddParameter(strParameterValue:=Chr(34) & strDataFrame & Chr(34), iPosition:=0)
+            clsGetSummaryVariablesFunction.AddParameter("data_name", Chr(34) & strDataFrame & Chr(34), iPosition:=0)
 
             ' Add to R syntax (so it appears in the final R command)
             ucrBase.clsRsyntax.AddToAfterCodes(clsGetLinkedDataFrameFunction, iPosition:=1)
@@ -573,7 +573,7 @@ Public Class dlgClimaticSummary
             End If
 
             ' Configure day range parameter if needed
-            If rdoWithinYear.Checked AndAlso ucrChkDayRange.Checked Then
+            If ucrChkDayRange.Checked Then
                 clsGetDailyDataCalculationFunction.AddParameter("Day_Range", Chr(34) & ucrInputFilterPreview.GetText & Chr(34), iPosition:=2)
             Else
                 clsGetDailyDataCalculationFunction.RemoveParameterByName("Day_Range")
@@ -653,30 +653,31 @@ Public Class dlgClimaticSummary
         clsKeyColsVector.ClearParameters()
 
         If Not ucrReceiverStation.IsEmpty Then
-            clsKeyColsVector.AddParameter(ucrReceiverStation.GetVariableNames, Chr(34) & "station" & Chr(34))
+            clsKeyColsVector.AddParameter("station", ucrReceiverStation.GetVariableNames(True))
         End If
 
         If rdoAnnual.Checked OrElse rdoAnnualWithinYear.Checked Then
             If Not ucrReceiverYear.IsEmpty Then
-                clsKeyColsVector.AddParameter(ucrReceiverYear.GetVariableNames, Chr(34) & "year" & Chr(34))
+                clsKeyColsVector.AddParameter("year", ucrReceiverYear.GetVariableNames(True))
             End If
         End If
 
         If rdoWithinYear.Checked OrElse rdoAnnualWithinYear.Checked Then
             If Not ucrReceiverWithinYear.IsEmpty Then
-                clsKeyColsVector.AddParameter(ucrReceiverWithinYear.GetVariableNames, Chr(34) & "month" & Chr(34))
+                clsKeyColsVector.AddParameter("month", ucrReceiverWithinYear.GetVariableNames(True))
             End If
         End If
 
         If rdoDaily.Checked Then
             If Not ucrReceiverDOY.IsEmpty Then
-                clsKeyColsVector.AddParameter(ucrReceiverDOY.GetVariableNames, Chr(34) & "date" & Chr(34))
+                clsKeyColsVector.AddParameter("date", ucrReceiverDOY.GetVariableNames(True))
             End If
         End If
 
         ' Add types for the data columns being summarised
         If Not ucrReceiverElements.IsEmpty Then
-            clsKeyColsVector.AddParameter(ucrReceiverElements.GetVariableNames, Chr(34) & "rain" & Chr(34))
+            ' Correctly formats as: rain = "rainfall_column_name"
+            clsKeyColsVector.AddParameter("rain", ucrReceiverElements.GetVariableNames(True))
         End If
     End Sub
 End Class
