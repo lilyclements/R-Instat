@@ -529,7 +529,7 @@ Public Class dlgLinePlot
         ucrInputFormula.SetText("y ~ x")
 
         clsDummyFunction.AddParameter("check", "line", iPosition:=0)
-        clsDummyFunction.AddParameter("checked", "False", iPosition:=1)
+        ' clsDummyFunction.AddParameter("checked", "False", iPosition:=1)
 
         clsBaseOperator.SetOperation("+")
         clsBaseOperator.AddParameter("ggplot", clsRFunctionParameter:=clsRggplotFunction, iPosition:=0)
@@ -885,7 +885,7 @@ Public Class dlgLinePlot
     End Sub
 
     Private Sub cmdOptions_Click(sender As Object, e As EventArgs) Handles cmdOptions.Click, PlotOptionsToolStripMenuItem.Click
-        sdgPlots.SetRCode(clsNewOperator:=clsBaseOperator, clsNewYScalecontinuousFunction:=clsYScalecontinuousFunction, clsNewXScalecontinuousFunction:=clsXScalecontinuousFunction,
+        sdgPlots.SetRCode(clsNewOperator:=ucrBase.clsRsyntax.clsBaseOperator, clsNewYScalecontinuousFunction:=clsYScalecontinuousFunction, clsNewXScalecontinuousFunction:=clsXScalecontinuousFunction,
                     clsNewXLabsTitleFunction:=clsXlabsFunction, clsNewYLabTitleFunction:=clsYlabFunction, clsNewLabsFunction:=clsLabsFunction, clsNewFacetFunction:=clsFacetFunction,
                                 clsNewThemeFunction:=clsThemeFunction, dctNewThemeFunctions:=dctThemeFunctions, clsNewGlobalAesFunction:=clsRaesFunction, ucrNewBaseSelector:=ucrLinePlotSelector, clsNewFacetVariablesOperator:=clsFacetVariablesOperator,
  clsNewCoordPolarFunction:=clsCoordPolarFunction, clsNewCoordPolarStartOperator:=clsCoordPolarStartOperator, clsNewXScaleDateFunction:=clsXScaleDateFunction, clsNewAnnotateFunction:=clsAnnotateFunction,
@@ -987,7 +987,7 @@ Public Class dlgLinePlot
         Dim strChangedText As String = ucrChangedControl.GetText()
         If strChangedText <> strNone Then
             If Not (strChangedText = strFacetCol OrElse strChangedText = strFacetColAll _
-            OrElse strChangedText = strFacetRow OrElse strChangedText = strFacetRowAll OrElse strChangedText = strFacetRowAndCol) _
+            OrElse strChangedText = strFacetRow OrElse strChangedText = strFacetRowAll OrElse strChangedText = strFacetRowAndCol OrElse strChangedText = strFacetRowAndColAll) _
             AndAlso Not ucrInputStation.Equals(ucrChangedControl) _
             AndAlso ucrInputStation.GetText() = strChangedText Then
 
@@ -997,12 +997,14 @@ Public Class dlgLinePlot
             End If
             If (strChangedText = strFacetWrap AndAlso
             (ucrInputStation.GetText = strFacetRow OrElse ucrInputStation.GetText = strFacetRowAll _
-            OrElse ucrInputStation.GetText = strFacetCol OrElse ucrInputStation.GetText = strFacetColAll OrElse ucrInputStation.GetText = strFacetRowAndCol)) _
+            OrElse ucrInputStation.GetText = strFacetCol OrElse ucrInputStation.GetText = strFacetColAll _
+            OrElse ucrInputStation.GetText = strFacetRowAndCol OrElse ucrInputStation.GetText = strFacetRowAndColAll)) _
         OrElse ((strChangedText = strFacetRow OrElse strChangedText = strFacetRowAll) _
             AndAlso ucrInputStation.GetText = strFacetWrap) _
         OrElse ((strChangedText = strFacetCol OrElse strChangedText = strFacetColAll) _
             AndAlso ucrInputStation.GetText = strFacetWrap) _
-             OrElse (strChangedText = strFacetRowAndCol AndAlso ucrInputStation.GetText = strFacetWrap) Then
+            OrElse ((strChangedText = strFacetRowAndCol OrElse strChangedText = strFacetRowAndColAll) _
+             AndAlso ucrInputStation.GetText = strFacetWrap) Then
 
                 ucrInputStation.SetName(strNone)
             End If
@@ -1117,9 +1119,11 @@ Public Class dlgLinePlot
         If clsPipeOperator.ContainsParameter("mutate") Then
             clsGroupByFunction.ClearParameters()
             If clsBaseOperator.ContainsParameter("facets") Then
+                '' Feb 07 2026
+                ''This should be figured out, when we have mutate in the clsPipeOperator for the all Cases
                 Select Case ucrInputStation.GetText()
                     Case strFacetWrap
-                        GetParameterValue(clsFacetVariablesOperator)
+                        'GetParameterValue(clsFacetVariablesOperator)
                 End Select
             End If
             If clsGroupByFunction.iParameterCount > 0 Then
